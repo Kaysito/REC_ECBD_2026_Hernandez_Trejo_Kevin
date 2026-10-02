@@ -40,6 +40,37 @@ dashboard/      Archivos de Power BI
 docs/           Informes y evidencias
 ```
 
+## Metodologia de trabajo
+
+El proyecto seguira CRISP-DM mediante seis etapas iterativas:
+
+1. Comprension del problema.
+2. Comprension de los datos.
+3. Preparacion de los datos.
+4. Modelado.
+5. Evaluacion.
+6. Despliegue y comunicacion.
+
+La evaluacion de clasificacion considerara `macro F1`, accuracy y matriz de
+confusion. La regresion se evaluara con MAE, RMSE y R2. Para el analisis no
+supervisado se utilizaran PCA, clustering y la metrica silhouette.
+
+## Herramientas propuestas
+
+- Python, pandas y NumPy para tratamiento de datos.
+- Matplotlib y Seaborn para visualizacion.
+- scikit-learn para pipelines, modelos y evaluacion.
+- PostgreSQL y SQL para el Data Mart.
+- Power BI para el dashboard final.
+- Git y GitHub para trazabilidad y evidencias.
+
+## Planeacion
+
+El cronograma esta alineado con las entregas del recursamiento entre el 25 de
+septiembre y el 20 de noviembre de 2026. La planeacion formal de la Unidad I se
+encuentra en `outputs/Hernandez_Trejo_Kevin_U1_Planeacion_Recursamiento.pdf`.
+
 ## Estado
 
-Actividad 0: identificacion del proyecto, descarga y revision inicial del dataset.
+- Actividad 0: completada.
+- Unidad I: planeacion formal preparada.
