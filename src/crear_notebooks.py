@@ -92,9 +92,9 @@ print(f"Dataset cargado para modelado supervisado: {df.shape[0]} registros.")"""
 **Tratamiento de Data Leakage:** Se excluye `EquivDiameter` (calculado deterministamente como $\\sqrt{4A/\\pi}$) y `ConvexArea` para medir el verdadero aporte de los factores de forma y ejes."""),
 
     nbf.v4.new_code_cell("""reg_features = [
-    "Perimeter", "MajorAxisLength", "MinorAxisLength", "AspectRatio",
-    "Eccentricity", "Extent", "Solidity", "Roundness", "Compactness",
-    "ShapeFactor1", "ShapeFactor2", "ShapeFactor3", "ShapeFactor4"
+    "Perimeter", "MajorAxisLength", "MinorAxisLength",
+    "AspectRatio", "Eccentricity", "Extent", "Solidity",
+    "Roundness", "ShapeFactor3", "ShapeFactor4"
 ]
 X_reg = df[reg_features]
 y_reg = df["Area"]

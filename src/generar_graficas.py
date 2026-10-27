@@ -21,8 +21,9 @@ df = pd.read_csv(os.path.join("data", "processed", "dry_beans_cleaned.csv"))
 
 # 1. Grafica: Distribucion de clases tras limpieza
 plt.figure(figsize=(9, 5))
-conteo = df["Class"].value_counts()
-ax = sns.barplot(x=conteo.index, y=conteo.values, palette="Blues_d")
+conteo = df["Class"].value_counts().reset_index()
+conteo.columns = ["Clase", "Cantidad"]
+ax = sns.barplot(data=conteo, x="Clase", y="Cantidad", hue="Clase", palette="Blues_d", legend=False)
 plt.title("Distribucion de Instancias por Variedad de Frijol (Post-ETL: 13,543 granos)", fontsize=13, fontweight="bold")
 plt.xlabel("Variedad Botánica (Class)", fontsize=11)
 plt.ylabel("Numero de Observaciones", fontsize=11)
@@ -36,9 +37,9 @@ print("1. Grafica de distribucion guardada.")
 
 # 2. Grafica: Evaluacion de Regresion (Real vs Predicho)
 reg_features = [
-    "Perimeter", "MajorAxisLength", "MinorAxisLength", "AspectRatio",
-    "Eccentricity", "Extent", "Solidity", "Roundness", "Compactness",
-    "ShapeFactor1", "ShapeFactor2", "ShapeFactor3", "ShapeFactor4"
+    "Perimeter", "MajorAxisLength", "MinorAxisLength",
+    "AspectRatio", "Eccentricity", "Extent", "Solidity",
+    "Roundness", "ShapeFactor3", "ShapeFactor4"
 ]
 X_reg = df[reg_features]
 y_reg = df["Area"]

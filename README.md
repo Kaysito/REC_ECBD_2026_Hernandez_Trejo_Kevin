@@ -46,7 +46,8 @@ El archivo original se conserva sin modificaciones en `data/raw`. Los datos cura
 ├── docs/                Documentacion tecnica y reporte de revisiones
 │   ├── analisis_preliminar.md
 │   ├── diccionario_y_calidad_datos.md
-│   └── reporte_revision_u2_u3.md
+│   ├── reporte_revision_u2_u3.md
+│   └── lecciones_aprendidas_y_bitacora_tecnica.md
 ├── ejecutar_todo.bat     Script de ejecucion rapida en un clic
 └── requirements.txt     Dependencias del entorno analitico
 ```
@@ -58,9 +59,9 @@ El archivo original se conserva sin modificaciones en `data/raw`. Los datos cura
 1. **Unidad I (Comprension del Problema y Planeacion - 20%):** Completada. Documento en `outputs/` y marco comparativo IA / ML / Data Mining.
 2. **Unidad II (Preparacion de Datos, ETL y Data Mart - 15%):** Completada. Pipeline ETL funcional, auditoria de 68 duplicados y 0 nulos, esquema estrella en SQL Server.
 3. **Unidad III (Analisis Supervisado - 25%):** Avance funcional del 50% listo para revision.
-   - **Regresion sobre `Area`:**
-     - Regresion Lineal: $R^2 = 0.9987$, $MAE = 776.42$ px.
-     - Random Forest Regressor: $R^2 = 0.9997$, $MAE = 195.95$ px.
+   - **Regresion sobre `Area` (Sin variables derivadas):**
+     - Regresion Lineal: $R^2 = 0.9799$, $MAE = 3,112.06$ px.
+     - Random Forest Regressor: $R^2 = 0.9997$, $MAE = 191.79$ px.
    - **Clasificacion Multiclase (`Class`):**
      - Regresion Logistica: Accuracy = 91.92%, Macro F1 = 93.02%.
      - k-NN (k=5): Accuracy = 91.55%, Macro F1 = 92.70%.

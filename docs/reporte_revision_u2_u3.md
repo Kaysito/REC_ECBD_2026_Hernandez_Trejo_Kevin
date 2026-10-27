@@ -54,10 +54,10 @@ Para evitar la fuga de informacion (*data leakage*):
 
 | Modelo de Regresion | $R^2$ (Varianza explicada) | MAE (Error Absoluto Medio) | RMSE (Raiz Error Cuad. Medio) |
 |:---|:---:|:---:|:---:|
-| **Regresion Lineal Multiple (Baseline)** | 0.9987 | 776.42 px | 1,073.06 px |
-| **Random Forest Regressor** | **0.9997** | **195.95 px** | **548.26 px** |
+| **Regresion Lineal Multiple (Baseline)** | 0.9799 | 3,112.06 px | 4,237.15 px |
+| **Random Forest Regressor** | **0.9997** | **191.79 px** | **527.65 px** |
 
-*Conclusion:* El modelo no lineal Random Forest reduce el error absoluto medio a solo 195.95 pixeles, demostrando una precision sobresaliente sin emplear variables triviales.
+*Conclusion:* El modelo no lineal Random Forest reduce el error absoluto medio a solo 191.79 pixeles, demostrando una precision sobresaliente sin emplear variables con trampa algebraica (detallado en `docs/lecciones_aprendidas_y_bitacora_tecnica.md`).
 
 ### 3.2. Clasificacion Multiclase: Reconocimiento de Variedades (`Class`)
 Dado el desbalance entre la clase mayoritaria (`DERMASON` con 3,546) y la minoritaria (`BOMBAY` con 522), se aplico una **particion estratificada 80/20** y se priorizo la metrica **Macro F1-Score**.
@@ -111,3 +111,8 @@ Si el docente solicita justificar decisiones clave durante la revision:
   - `outputs/regresion_real_vs_predicho.png`
   - `outputs/matriz_confusion_multiclase.png`
   - `outputs/comparativa_metricas_clasificacion.png`
+- **Documentacion y reportes tecnicos:**
+  - `docs/analisis_preliminar.md`
+  - `docs/diccionario_y_calidad_datos.md`
+  - `docs/reporte_revision_u2_u3.md`
+  - `docs/lecciones_aprendidas_y_bitacora_tecnica.md`

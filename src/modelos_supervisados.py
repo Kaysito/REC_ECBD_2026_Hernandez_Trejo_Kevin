@@ -49,9 +49,19 @@ def ejecutar_modelado_supervisado():
     print("matematica determinista directa) y 'ConvexArea' (envolvente redundante).")
     
     reg_features = [
-        "Perimeter", "MajorAxisLength", "MinorAxisLength", "AspectRatio",
-        "Eccentricity", "Extent", "Solidity", "Roundness", "Compactness",
-        "ShapeFactor1", "ShapeFactor2", "ShapeFactor3", "ShapeFactor4"
+        # Geometria de contorno (no derivadas de Area directamente)
+        "Perimeter", "MajorAxisLength", "MinorAxisLength",
+        # Proporciones de forma (adimensionales)
+        "AspectRatio", "Eccentricity", "Extent", "Solidity",
+        "Roundness",
+        # NOTA: Se excluyen deliberadamente:
+        # - EquivDiameter: sqrt(4*Area/pi) -> derivada exacta de Area
+        # - ConvexArea:    correlacion 0.9999 con Area, envolvente convexo
+        # - ShapeFactor1:  = MajorAxisLength / Area -> formula directa (correlacion -0.848 inversa)
+        # - ShapeFactor2:  = MinorAxisLength / Area -> formula directa (correlacion -0.641)
+        # - Compactness:   = EquivDiameter / MajorAxisLength -> derivada de EquivDiameter
+        # Factores de forma independientes residuales
+        "ShapeFactor3", "ShapeFactor4"
     ]
     
     X_reg = df[reg_features]
