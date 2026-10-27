@@ -1,76 +1,86 @@
 # Clasificacion automatica y analisis morfologico de variedades de frijol
 
-Proyecto individual de recursamiento para la asignatura Extraccion de Conocimiento en Bases de Datos.
+Proyecto individual de recursamiento para la asignatura Extraccion de Conocimiento en Bases de Datos (ECBD).
 
 ## Estudiante
 
-- Nombre: Kevin Hernandez Trejo
-- Matricula: 23300950
-- Grupo y carrera: 10IDGS-G1
-- Institucion: Universidad Tecnologica de Tula-Tepeji
+- **Nombre:** Kevin Hernandez Trejo
+- **Matricula:** 23300950
+- **Grupo y carrera:** 10IDGS-G1
+- **Docente:** Ing. Jose Luis Herrera Gallardo, MTI
+- **Institucion:** Universidad Tecnologica de Tula-Tepeji (UTTT)
+
+---
 
 ## Dataset
 
-- Nombre: Dry Bean Dataset
-- Fuente: UCI Machine Learning Repository
-- Enlace: https://archive.ics.uci.edu/dataset/602/dry+bean
-- Registros: 13,611
-- Variables predictoras: 16
-- Variable de clase: `Class`
+- **Nombre:** Dry Bean Dataset
+- **Fuente:** UCI Machine Learning Repository
+- **DOI:** [10.24432/C50S4B](https://doi.org/10.24432/C50S4B)
+- **Registros crudos:** 13,611
+- **Registros limpios:** 13,543 (68 duplicados exactos tratados en la clase `HOROZ`)
+- **Variables predictoras:** 16 biometricas
+- **Variable de clase:** `Class` (7 variedades botánicas)
 
-El archivo original se conserva sin modificaciones en `data/raw`. Los datos limpios o transformados se guardaran posteriormente en `data/processed`.
+El archivo original se conserva sin modificaciones en `data/raw`. Los datos curados se encuentran en `data/processed/dry_beans_cleaned.csv`.
 
-## Objetivos preliminares
+---
 
-- Clasificacion: predecir la variedad de frijol mediante `Class`, que contiene siete clases.
-- Regresion: estimar `Area` mediante caracteristicas morfologicas seleccionadas. Para evitar fuga de informacion, se evaluara excluir variables derivadas directamente del area, como `ConvexArea` y `EquivDiameter`.
-- Analisis no supervisado: identificar agrupamientos naturales y estudiar la separacion entre variedades mediante clustering y PCA.
-
-## Estructura
+## Estructura del Repositorio
 
 ```text
-data/
-  raw/          Datos originales sin modificar
-  processed/    Datos limpios y transformados
-notebooks/      Exploracion y modelos
-src/            Codigo reutilizable
-sql/            Scripts del Data Mart
-modelos/        Modelos entrenados
-dashboard/      Archivos de Power BI
-docs/           Informes y evidencias
+├── data/
+│   ├── raw/             Datos originales inmutables (ZIP, XLSX, ARFF)
+│   └── processed/       Datos limpios (dry_beans_cleaned.csv, etl_summary.json)
+├── notebooks/           Jupyter Notebooks ejecutados y reproducibles
+│   ├── 01_preparacion_y_etl.ipynb
+│   └── 02_modelos_supervisados.ipynb
+├── src/                 Codigo modular en Python
+│   ├── etl.py
+│   ├── modelos_supervisados.py
+│   └── generar_graficas.py
+├── sql/                 Data Mart dimensional para SQL Server
+│   └── schema_datamart.sql
+├── modelos/             Modelos serializados (.joblib)
+├── outputs/             Reportes, metricas y graficos analiticos (.png, .json, .pdf)
+├── docs/                Documentacion tecnica y reporte de revisiones
+│   ├── analisis_preliminar.md
+│   ├── diccionario_y_calidad_datos.md
+│   └── reporte_revision_u2_u3.md
+├── ejecutar_todo.bat     Script de ejecucion rapida en un clic
+└── requirements.txt     Dependencias del entorno analitico
 ```
 
-## Metodologia de trabajo
+---
 
-El proyecto seguira CRISP-DM mediante seis etapas iterativas:
+## Metodologia CRISP-DM y Estado Actual del Proyecto
 
-1. Comprension del problema.
-2. Comprension de los datos.
-3. Preparacion de los datos.
-4. Modelado.
-5. Evaluacion.
-6. Despliegue y comunicacion.
+1. **Unidad I (Comprension del Problema y Planeacion - 20%):** Completada. Documento en `outputs/` y marco comparativo IA / ML / Data Mining.
+2. **Unidad II (Preparacion de Datos, ETL y Data Mart - 15%):** Completada. Pipeline ETL funcional, auditoria de 68 duplicados y 0 nulos, esquema estrella en SQL Server.
+3. **Unidad III (Analisis Supervisado - 25%):** Avance funcional del 50% listo para revision.
+   - **Regresion sobre `Area`:**
+     - Regresion Lineal: $R^2 = 0.9987$, $MAE = 776.42$ px.
+     - Random Forest Regressor: $R^2 = 0.9997$, $MAE = 195.95$ px.
+   - **Clasificacion Multiclase (`Class`):**
+     - Regresion Logistica: Accuracy = 91.92%, Macro F1 = 93.02%.
+     - k-NN (k=5): Accuracy = 91.55%, Macro F1 = 92.70%.
+     - Random Forest Classifier: Accuracy = 92.03%, **Macro F1 = 93.18%**.
+4. **Unidad IV (Analisis No Supervisado - 25%):** Por iniciar (Clustering k-means y PCA).
+5. **Unidad V (Visualizacion y Cierre - 15%):** Por iniciar (Dashboard Power BI).
 
-La evaluacion de clasificacion considerara `macro F1`, accuracy y matriz de
-confusion. La regresion se evaluara con MAE, RMSE y R2. Para el analisis no
-supervisado se utilizaran PCA, clustering y la metrica silhouette.
+---
 
-## Herramientas propuestas
+## Instrucciones de Reproduccion
 
-- Python, pandas y NumPy para tratamiento de datos.
-- Matplotlib y Seaborn para visualizacion.
-- scikit-learn para pipelines, modelos y evaluacion.
-- PostgreSQL y SQL para el Data Mart.
-- Power BI para el dashboard final.
-- Git y GitHub para trazabilidad y evidencias.
+Para ejecutar todo el flujo en Windows:
 
-## Planeacion
-
-El cronograma esta alineado con las entregas del recursamiento entre el 25 de
-septiembre y el 20 de noviembre de 2026. La planeacion formal de la Unidad I se
-encuentra en `outputs/Hernandez_Trejo_Kevin_U1_Planeacion_Recursamiento.pdf`.
-
-## Estado
-
-- Actividad 0: completada.
-- Unidad I: planeacion formal preparada.
+1. Ejecutar el script por lotes:
+   ```cmd
+   ejecutar_todo.bat
+   ```
+2. O ejecutar individualmente:
+   ```powershell
+   .venv\Scripts\python.exe src/etl.py
+   .venv\Scripts\python.exe src/modelos_supervisados.py
+   .venv\Scripts\python.exe src/generar_graficas.py
+   ```
