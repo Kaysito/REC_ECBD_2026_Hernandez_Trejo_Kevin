@@ -33,6 +33,7 @@ El archivo original se conserva sin modificaciones en `data/raw`. Los datos cura
 │   ├── raw/             Datos originales inmutables (ZIP, XLSX, ARFF)
 │   └── processed/       Datos limpios (dry_beans_cleaned.csv, etl_summary.json)
 ├── notebooks/           Jupyter Notebooks ejecutados y reproducibles
+│   ├── Hernandez_Trejo_Kevin_U2_AE1_Exploracion.ipynb
 │   ├── 01_preparacion_y_etl.ipynb
 │   └── 02_modelos_supervisados.ipynb
 ├── src/                 Codigo modular en Python
@@ -44,6 +45,7 @@ El archivo original se conserva sin modificaciones en `data/raw`. Los datos cura
 ├── modelos/             Modelos serializados (.joblib)
 ├── outputs/             Reportes, metricas y graficos analiticos (.png, .json, .pdf)
 ├── docs/                Documentacion tecnica y reporte de revisiones
+│   ├── Hernandez_Trejo_Kevin_U2_AE1_Diagnostico.pdf
 │   ├── analisis_preliminar.md
 │   ├── diccionario_y_calidad_datos.md
 │   ├── reporte_revision_u2_u3.md
@@ -58,6 +60,8 @@ El archivo original se conserva sin modificaciones en `data/raw`. Los datos cura
 
 1. **Unidad I (Comprension del Problema y Planeacion - 20%):** Completada. Documento en `outputs/` y marco comparativo IA / ML / Data Mining.
 2. **Unidad II (Preparacion de Datos, ETL y Data Mart - 15%):** Completada. Pipeline ETL funcional, auditoria de 68 duplicados y 0 nulos, esquema estrella en SQL Server.
+   - **AE1 - Exploracion y diagnostico:** notebook ejecutado e informe PDF disponibles en `notebooks/` y `docs/`.
+   - El diagnostico de AE1 trabaja exclusivamente en modo lectura sobre `data/raw/` y verifica la integridad del original mediante SHA-256.
 3. **Unidad III (Analisis Supervisado - 25%):** Avance funcional del 50% listo para revision.
    - **Regresion sobre `Area` (Sin variables derivadas):**
      - Regresion Lineal: $R^2 = 0.9799$, $MAE = 3,112.06$ px.
