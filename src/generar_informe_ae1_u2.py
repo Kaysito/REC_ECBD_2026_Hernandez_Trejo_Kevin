@@ -3,10 +3,12 @@
 from pathlib import Path
 import hashlib
 import sys
+import zipfile
 
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
+from PIL import Image as PILImage, ImageDraw, ImageFont
 
 # ReportLab is provided by the Codex document runtime. Appending after loading
 # the project's numeric stack avoids replacing this venv's NumPy/Pandas wheels.
@@ -27,6 +29,8 @@ DATA = ROOT / "data" / "raw" / "dry_bean_dataset" / "DryBeanDataset" / "Dry_Bean
 OUT = ROOT / "docs" / "Hernandez_Trejo_Kevin_U2_AE1_Diagnostico.pdf"
 CHARTS = ROOT / "tmp" / "pdfs" / "u2_ae1"
 CHARTS.mkdir(parents=True, exist_ok=True)
+COVER = CHARTS / "portada_institucional_u2.png"
+TEMPLATE_DOCX = Path(r"C:\Users\crepe\Downloads\U2_Fase 4AP.docx")
 
 NAVY = colors.HexColor("#173B63")
 TEAL = colors.HexColor("#197A7A")
@@ -51,6 +55,68 @@ fonts()
 df = pd.read_excel(DATA)
 sha = hashlib.sha256(DATA.read_bytes()).hexdigest()
 numeric = df.select_dtypes(include="number")
+
+
+def _font_path(bold=False):
+    choices = [
+        Path(r"C:\Windows\Fonts\aptos-bold.ttf" if bold else r"C:\Windows\Fonts\aptos.ttf"),
+        Path(r"C:\Windows\Fonts\arialbd.ttf" if bold else r"C:\Windows\Fonts\arial.ttf"),
+    ]
+    return str(next(p for p in choices if p.exists()))
+
+
+def _fit(draw, text, max_width, start, minimum=28, bold=False):
+    for size in range(start, minimum - 1, -2):
+        font = ImageFont.truetype(_font_path(bold), size)
+        if draw.textbbox((0, 0), text, font=font)[2] <= max_width:
+            return font
+    return ImageFont.truetype(_font_path(bold), minimum)
+
+
+def _center(draw, y, text, font, fill):
+    box = draw.textbbox((0, 0), text, font=font)
+    draw.text(((2550 - (box[2] - box[0])) / 2, y), text, font=font, fill=fill)
+
+
+def create_cover():
+    """Reproduce la portada institucional utilizada en la Unidad I."""
+    if not TEMPLATE_DOCX.exists():
+        raise FileNotFoundError(f"No se encontró la plantilla institucional: {TEMPLATE_DOCX}")
+    with zipfile.ZipFile(TEMPLATE_DOCX) as zf:
+        background = PILImage.open(zf.open("word/media/image4.jpg")).convert("RGB")
+        background.load()
+    img = background.resize((2550, 3300), PILImage.Resampling.LANCZOS)
+    draw = ImageDraw.Draw(img, "RGBA")
+    draw.rounded_rectangle((445, 985, 2105, 2580), radius=38, fill=(255, 255, 255, 242))
+
+    _center(draw, 1065, "UNIDAD II", ImageFont.truetype(_font_path(True), 72), "#173B63")
+    title = "EXPLORACIÓN Y DIAGNÓSTICO DEL DATASET"
+    _center(draw, 1170, title, _fit(draw, title, 1500, 67, 42, True), "#173B63")
+    _center(draw, 1360, "Clasificación automática y análisis morfológico",
+            _fit(draw, "Clasificación automática y análisis morfológico", 1540, 52, 34, True), "#197A7A")
+    _center(draw, 1430, "de variedades de frijol",
+            ImageFont.truetype(_font_path(True), 48), "#197A7A")
+    draw.line((700, 1535, 1850, 1535), fill="#C9D5DE", width=4)
+
+    rows = [
+        ("ASIGNATURA", "Extracción de Conocimiento en Bases de Datos"),
+        ("ACTIVIDAD", "Evaluación 1 - Unidad II"),
+        ("ESTUDIANTE", "Kevin Hernandez Trejo"),
+        ("MATRÍCULA", "23300950"),
+        ("GRUPO Y CARRERA", "10IDGS-G1"),
+        ("DOCENTE", "Ing. Jose Luis Herrera Gallardo, MTI"),
+        ("FECHA", "9 de noviembre de 2026"),
+    ]
+    label_font = ImageFont.truetype(_font_path(True), 33)
+    value_font = ImageFont.truetype(_font_path(False), 38)
+    y = 1630
+    for label, value in rows:
+        draw.text((625, y), label, font=label_font, fill="#173B63")
+        draw.text((1035, y - 3), value, font=value_font, fill="#27333F")
+        y += 117
+    _center(draw, 2470, "Universidad Tecnológica de Tula-Tepeji",
+            ImageFont.truetype(_font_path(False), 31), "#5E6B76")
+    img.save(COVER, quality=96)
 
 
 def charts():
@@ -83,6 +149,7 @@ def charts():
     fig.tight_layout(); fig.savefig(CHARTS / "correlacion.png", dpi=190); plt.close(fig)
 
 
+create_cover()
 charts()
 
 
@@ -131,7 +198,11 @@ class Doc(BaseDocTemplate):
 
 
 def header_footer(canvas, doc):
-    if doc.page == 1: return
+    if doc.page == 1:
+        canvas.saveState()
+        canvas.drawImage(str(COVER), 0, 0, width=letter[0], height=letter[1], preserveAspectRatio=False, mask="auto")
+        canvas.restoreState()
+        return
     canvas.saveState(); canvas.setFillColor(NAVY); canvas.rect(0, letter[1]-1.05*cm, letter[0], 1.05*cm, fill=1, stroke=0)
     canvas.setFillColor(WHITE); canvas.setFont("DocB", 8.4); canvas.drawString(1.7*cm, letter[1]-.7*cm, "UNIDAD II | EXPLORACIÓN Y DIAGNÓSTICO")
     canvas.setFont("Doc", 8.2); canvas.drawRightString(letter[0]-1.7*cm, letter[1]-.7*cm, "Kevin Hernandez Trejo")
@@ -140,16 +211,7 @@ def header_footer(canvas, doc):
     canvas.drawRightString(letter[0]-1.7*cm, .75*cm, f"Página {doc.page}"); canvas.restoreState()
 
 
-story = []
-
-# Cover
-story.append(Spacer(1, 1.1*cm))
-d = Drawing(480, 90); d.add(Rect(0, 0, 480, 90, fillColor=NAVY, strokeColor=NAVY)); d.add(String(240, 57, "UNIDAD II", textAnchor="middle", fontName="DocB", fontSize=18, fillColor=WHITE)); d.add(String(240, 29, "EXPLORACIÓN Y DIAGNÓSTICO DEL DATASET", textAnchor="middle", fontName="DocB", fontSize=16, fillColor=WHITE)); story.append(d)
-story += [Spacer(1, 1.0*cm), P("Clasificación automática y análisis morfológico de variedades de frijol", "T"), Spacer(1, .3*cm)]
-cover = [["ASIGNATURA", "Extracción de Conocimiento en Bases de Datos"], ["ACTIVIDAD", "Evaluación 1 - Unidad II"], ["ESTUDIANTE", "Kevin Hernandez Trejo"], ["MATRÍCULA", "23300950"], ["GRUPO Y CARRERA", "10IDGS-G1"], ["DOCENTE", "Ing. Jose Luis Herrera Gallardo, MTI"], ["FECHA", "9 de noviembre de 2026"], ["REPOSITORIO", "github.com/Kaysito/REC_ECBD_2026_Hernandez_Trejo_Kevin"]]
-ct = Table([[P(a,"H2"), P(b,"B")] for a,b in cover], colWidths=[4.2*cm, 11.6*cm])
-ct.setStyle(TableStyle([("GRID",(0,0),(-1,-1),.5,LINE),("BACKGROUND",(0,0),(0,-1),PALE),("VALIGN",(0,0),(-1,-1),"MIDDLE"),("LEFTPADDING",(0,0),(-1,-1),7),("TOPPADDING",(0,0),(-1,-1),7),("BOTTOMPADDING",(0,0),(-1,-1),7)])); story.append(ct)
-story += [Spacer(1, 1.0*cm), P("Informe técnico elaborado sobre el archivo original conservado sin modificaciones en data/raw/.", "S"), PageBreak()]
+story = [Spacer(1, 23.5*cm), PageBreak()]
 
 story += [P("Índice", "T")]
 for line in ["1. Resumen ejecutivo", "2. Identificación y fuente", "3. Estructura y exploración", "4. Diccionario de datos", "5. Diagnóstico de calidad", "6. Estadística descriptiva", "7. Valores atípicos", "8. Visualizaciones", "9. Propuestas analíticas", "10. Conclusiones", "11. Referencias"]: story.append(P(line, "B"))
