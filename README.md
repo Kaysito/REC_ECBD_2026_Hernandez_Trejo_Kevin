@@ -35,14 +35,17 @@ El archivo original se conserva sin modificaciones en `data/raw`. Los datos cura
 ├── notebooks/           Jupyter Notebooks ejecutados y reproducibles
 │   ├── Hernandez_Trejo_Kevin_U2_AE1_Exploracion.ipynb
 │   ├── 01_preparacion_y_etl.ipynb
-│   └── 02_modelos_supervisados.ipynb
+│   ├── 02_modelos_supervisados.ipynb
+│   └── 03_modelos_no_supervisados.ipynb
 ├── src/                 Codigo modular en Python
 │   ├── etl.py
 │   ├── modelos_supervisados.py
+│   ├── modelos_no_supervisados.py
 │   └── generar_graficas.py
 ├── sql/                 Data Mart dimensional para SQL Server
 │   └── schema_datamart.sql
 ├── modelos/             Modelos serializados (.joblib)
+├── dashboard/           Dashboard interactivo en Streamlit
 ├── outputs/             Reportes, metricas y graficos analiticos (.png, .json, .pdf)
 ├── docs/                Documentacion tecnica y reporte de revisiones
 │   ├── Hernandez_Trejo_Kevin_U2_AE1_Diagnostico.pdf
@@ -62,22 +65,27 @@ El archivo original se conserva sin modificaciones en `data/raw`. Los datos cura
 2. **Unidad II (Preparacion de Datos, ETL y Data Mart - 15%):** Completada. Pipeline ETL funcional, auditoria de 68 duplicados y 0 nulos, esquema estrella en SQL Server.
    - **AE1 - Exploracion y diagnostico:** notebook ejecutado e informe PDF disponibles en `notebooks/` y `docs/`.
    - El diagnostico de AE1 trabaja exclusivamente en modo lectura sobre `data/raw/` y verifica la integridad del original mediante SHA-256.
-3. **Unidad III (Analisis Supervisado - 25%):** Avance funcional del 50% listo para revision.
+3. **Unidad III (Analisis Supervisado - 25%):** Completada con particion solicitada de **70% entrenamiento / 30% prueba** (9,480 / 4,063 registros).
    - **Regresion sobre `Area` (Sin variables derivadas):**
-     - Regresion Lineal: $R^2 = 0.9799$, $MAE = 3,112.06$ px.
-     - Random Forest Regressor: $R^2 = 0.9997$, $MAE = 191.79$ px.
+     - Regresion Lineal: $R^2 = 0.9790$, $MAE = 3,138.22$ px.
+     - Random Forest Regressor: $R^2 = 0.9996$, $MAE = 213.23$ px.
    - **Clasificacion Multiclase (`Class`):**
-     - Regresion Logistica: Accuracy = 91.92%, Macro F1 = 93.02%.
-     - k-NN (k=5): Accuracy = 91.55%, Macro F1 = 92.70%.
-     - Random Forest Classifier: Accuracy = 92.03%, **Macro F1 = 93.18%**.
-4. **Unidad IV (Analisis No Supervisado - 25%):** Por iniciar (Clustering k-means y PCA).
-5. **Unidad V (Visualizacion y Cierre - 15%):** Por iniciar (Dashboard Power BI).
+     - Regresion Logistica: Accuracy = 92.10%, **Macro F1 = 93.24%**.
+     - k-NN (k=5): Accuracy = 91.66%, Macro F1 = 92.90%.
+     - Random Forest Classifier: Accuracy = 91.95%, Macro F1 = 93.22%.
+4. **Unidad IV (Analisis No Supervisado - 25%):** Implementada y reproducible.
+   - Estandarizacion con `StandardScaler`.
+   - PCA: 4 componentes conservan al menos 90% de la varianza.
+   - Evaluacion K-means de k=2 a k=10 mediante codo y silhouette.
+   - Mejor resultado interno: k=3, silhouette=0.4203.
+   - Comparacion interpretativa con `Class`: ARI=0.2964 y NMI=0.4837; la clase no participa en el entrenamiento.
+5. **Unidad V (Visualizacion y Cierre - 15%):** Dashboard preliminar funcional en Streamlit con filtros, indicadores y resultados supervisados/no supervisados.
 
 ---
 
 ## Instrucciones de Reproduccion
 
-Para ejecutar todo el flujo en Windows:
+Para ejecutar todo el flujo analitico en Windows:
 
 1. Ejecutar el script por lotes:
    ```cmd
@@ -88,4 +96,13 @@ Para ejecutar todo el flujo en Windows:
    .venv\Scripts\python.exe src/etl.py
    .venv\Scripts\python.exe src/modelos_supervisados.py
    .venv\Scripts\python.exe src/generar_graficas.py
+   .venv\Scripts\python.exe src/modelos_no_supervisados.py
    ```
+
+Para abrir el dashboard:
+
+```powershell
+.venv\Scripts\python.exe -m streamlit run dashboard/app.py
+```
+
+El navegador abrira normalmente `http://localhost:8501`. Los filtros del dashboard modifican la visualizacion, pero no reentrenan los modelos.
