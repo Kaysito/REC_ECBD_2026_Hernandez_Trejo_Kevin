@@ -1,0 +1,77 @@
+{
+    "registros": 13543,
+    "variables_numericas": [
+        "Area",
+        "Perimeter",
+        "MajorAxisLength",
+        "MinorAxisLength",
+        "AspectRatio",
+        "Eccentricity",
+        "ConvexArea",
+        "EquivDiameter",
+        "Extent",
+        "Solidity",
+        "Roundness",
+        "Compactness",
+        "ShapeFactor1",
+        "ShapeFactor2",
+        "ShapeFactor3",
+        "ShapeFactor4"
+    ],
+    "componentes_pca_para_90_por_ciento": 4,
+    "varianza_explicada_acumulada": 0.9500043900321756,
+    "evaluacion_k": [
+        {
+            "k": 2,
+            "inercia": 118560.30382179194,
+            "silhouette": 0.41097099380906893
+        },
+        {
+            "k": 3,
+            "inercia": 84724.43585938109,
+            "silhouette": 0.42025809846015943
+        },
+        {
+            "k": 4,
+            "inercia": 66991.2414976549,
+            "silhouette": 0.3604998745019366
+        },
+        {
+            "k": 5,
+            "inercia": 53127.259898123004,
+            "silhouette": 0.3774746915472028
+        },
+        {
+            "k": 6,
+            "inercia": 46750.879924203924,
+            "silhouette": 0.3792743791353395
+        },
+        {
+            "k": 7,
+            "inercia": 41015.44058046856,
+            "silhouette": 0.3288757995415449
+        },
+        {
+            "k": 8,
+            "inercia": 37822.45091930069,
+            "silhouette": 0.3206646216969554
+        },
+        {
+            "k": 9,
+            "inercia": 35485.87370431616,
+            "silhouette": 0.3074893631854472
+        },
+        {
+            "k": 10,
+            "inercia": 33346.86569690565,
+            "silhouette": 0.29512804958807426
+        }
+    ],
+    "mejor_k_segun_silhouette": 3,
+    "silhouette_mejor_k": 0.42025809846015943,
+    "comparacion_externa_solo_interpretativa": {
+        "ARI": 0.2963972817306092,
+        "NMI": 0.4836512500335167
+    },
+    "nota": "Class no se utilizo para entrenar K-means; solo para interpretar los grupos obtenidos."
+}

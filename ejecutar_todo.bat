@@ -23,10 +23,19 @@ if %ERRORLEVEL% NEQ 0 (
 )
 
 echo.
-echo [3/3] Generando evidencias graficas en outputs/...
+echo [3/4] Generando evidencias graficas en outputs/...
 .venv\Scripts\python.exe src\generar_graficas.py
 if %ERRORLEVEL% NEQ 0 (
     echo Error generando graficas.
+    pause
+    exit /b %ERRORLEVEL%
+)
+
+echo.
+echo [4/4] Ejecutando PCA y K-means...
+.venv\Scripts\python.exe src\modelos_no_supervisados.py
+if %ERRORLEVEL% NEQ 0 (
+    echo Error durante el analisis no supervisado.
     pause
     exit /b %ERRORLEVEL%
 )
@@ -37,5 +46,6 @@ echo PROCESO COMPLETADO EXITOSAMENTE
 echo Dataset procesado en data/processed/
 echo Modelos serializados en modelos/
 echo Graficos y metricas guardados en outputs/
+echo Para abrir el dashboard: .venv\Scripts\python.exe -m streamlit run dashboard\app.py
 echo ==============================================================================
 pause
