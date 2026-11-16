@@ -99,7 +99,7 @@ print(f"Dataset cargado para modelado supervisado: {df.shape[0]} registros.")"""
 X_reg = df[reg_features]
 y_reg = df["Area"]
 
-X_tr_r, X_te_r, y_tr_r, y_te_r = train_test_split(X_reg, y_reg, test_size=0.20, random_state=42)
+X_tr_r, X_te_r, y_tr_r, y_te_r = train_test_split(X_reg, y_reg, test_size=0.30, random_state=42)
 
 # Modelo Baseline: Regresion Lineal Multiple
 lr_pipe = Pipeline([("scaler", StandardScaler()), ("model", LinearRegression())])
@@ -116,13 +116,13 @@ print(f"Regresion Lineal: R2 = {r2_score(y_te_r, y_pred_lr):.4f} | MAE = {mean_a
 print(f"Random Forest:    R2 = {r2_score(y_te_r, y_pred_rf):.4f} | MAE = {mean_absolute_error(y_te_r, y_pred_rf):.2f} px | RMSE = {np.sqrt(mean_squared_error(y_te_r, y_pred_rf)):.2f} px")"""),
 
     nbf.v4.new_markdown_cell("""## 2. Tarea de Clasificacion Multiclase (7 Variedades)
-Particion estratificada 80/20 para controlar el desbalance entre variedades (ej. Dermason con 3,546 vs Bombay con 522). Se prioriza la metrica **Macro F1-Score**."""),
+Particion estratificada 70/30 solicitada por el docente para controlar el desbalance entre variedades (ej. Dermason con 3,546 vs Bombay con 522). Se prioriza la metrica **Macro F1-Score**."""),
 
     nbf.v4.new_code_cell("""X_clf = df.drop(columns=["Class"])
 y_clf = df["Class"]
 
 X_tr_c, X_te_c, y_tr_c, y_te_c = train_test_split(
-    X_clf, y_clf, test_size=0.20, random_state=42, stratify=y_clf
+    X_clf, y_clf, test_size=0.30, random_state=42, stratify=y_clf
 )
 
 modelos = {

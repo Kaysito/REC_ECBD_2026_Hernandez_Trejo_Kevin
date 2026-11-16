@@ -44,7 +44,7 @@ reg_features = [
 X_reg = df[reg_features]
 y_reg = df["Area"]
 X_reg_train, X_reg_test, y_reg_train, y_reg_test = train_test_split(
-    X_reg, y_reg, test_size=0.20, random_state=42
+    X_reg, y_reg, test_size=0.30, random_state=42
 )
 model_rf_reg = joblib.load(os.path.join("modelos", "random_forest_regresor.joblib"))
 y_pred_rf = model_rf_reg.predict(X_reg_test)
@@ -68,7 +68,7 @@ clf_features = [col for col in df.columns if col != "Class"]
 X_clf = df[clf_features]
 y_clf = df["Class"]
 X_train_c, X_test_c, y_train_c, y_test_c = train_test_split(
-    X_clf, y_clf, test_size=0.20, random_state=42, stratify=y_clf
+    X_clf, y_clf, test_size=0.30, random_state=42, stratify=y_clf
 )
 model_rf_clf = joblib.load(os.path.join("modelos", "random_forest_classifier.joblib"))
 y_pred_clf = model_rf_clf.predict(X_test_c)

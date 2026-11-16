@@ -67,9 +67,9 @@ def ejecutar_modelado_supervisado():
     X_reg = df[reg_features]
     y_reg = df["Area"]
     
-    # Division train/test 80/20
+    # Division solicitada por el docente: 70% entrenamiento / 30% prueba
     X_reg_train, X_reg_test, y_reg_train, y_reg_test = train_test_split(
-        X_reg, y_reg, test_size=0.20, random_state=42
+        X_reg, y_reg, test_size=0.30, random_state=42
     )
     print(f"Conjunto Regresion: {X_reg_train.shape[0]} train, {X_reg_test.shape[0]} test.")
     
@@ -121,7 +121,7 @@ def ejecutar_modelado_supervisado():
     
     # Particion estratificada obligatoria por desbalance de clases
     X_train_c, X_test_c, y_train_c, y_test_c = train_test_split(
-        X_clf, y_clf, test_size=0.20, random_state=42, stratify=y_clf
+        X_clf, y_clf, test_size=0.30, random_state=42, stratify=y_clf
     )
     print(f"Conjunto Clasificacion: {X_train_c.shape[0]} train, {X_test_c.shape[0]} test (Estratificado).")
     
