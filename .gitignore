@@ -6,3 +6,8 @@ venv/
 *.pbix.tmp
 work/
 *.log
+ssis/**/bin/
+ssis/**/obj/
+ssis/**/.vs/
+ssis/**/*.dtproj.user
+ssis/CreateSsisPackage*.exe

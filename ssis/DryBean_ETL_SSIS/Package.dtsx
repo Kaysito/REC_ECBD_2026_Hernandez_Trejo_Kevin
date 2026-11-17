@@ -1,0 +1,137 @@
+﻿<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="11/16/2026 9:29:18 PM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="KAYJR"
+  DTS:CreatorName="KAYJR\crepe"
+  DTS:DTSID="{F7E80D9C-3719-4D2E-8A94-FA2DCC052189}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="17.0.1016.0"
+  DTS:LocaleID="2058"
+  DTS:ObjectName="ETL_DryBean_DataMart"
+  DTS:PackageType="5"
+  DTS:VersionBuild="1"
+  DTS:VersionGUID="{9E26DF9C-DFDA-492D-AE88-BA761A029F03}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[CN_DryBean_DataMart]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{A3CC464B-B49D-4948-A7ED-606C07495C0B}"
+      DTS:ObjectName="CN_DryBean_DataMart">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager DTS:ConnectionString="Provider=MSOLEDBSQL19;Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=DryBean_DataMart;Integrated Security=SSPI;Encrypt=Optional;TrustServerCertificate=True;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:Variables />
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\01 - EXTRACT - CSV a staging"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Carga 13,543 filas del CSV procesado a tablas de staging."
+      DTS:DTSID="{EF893ABF-0758-49C4-8C5F-48B997EB02A6}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="01 - EXTRACT - CSV a staging"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="3">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask"
+          SQLTask:Connection="{A3CC464B-B49D-4948-A7ED-606C07495C0B}"
+          SQLTask:SqlStatementSource="IF OBJECT_ID('dbo.stg_dry_beans_clean','U') IS NOT NULL DROP TABLE dbo.stg_dry_beans_clean;&#xA;IF OBJECT_ID('dbo.stg_dry_beans','U') IS NOT NULL DROP TABLE dbo.stg_dry_beans;&#xA;CREATE TABLE dbo.stg_dry_beans (Area INT, Perimeter FLOAT, MajorAxisLength FLOAT, MinorAxisLength FLOAT, AspectRatio FLOAT, Eccentricity FLOAT, ConvexArea INT, EquivDiameter FLOAT, Extent FLOAT, Solidity FLOAT, Roundness FLOAT, Compactness FLOAT, ShapeFactor1 FLOAT, ShapeFactor2 FLOAT, ShapeFactor3 FLOAT, ShapeFactor4 FLOAT, Class VARCHAR(50));&#xA;BULK INSERT dbo.stg_dry_beans FROM 'C:\Users\crepe\Documents\Proyectos\REC_ECBD_2026_Hernandez_Trejo_Kevin\data\processed\dry_beans_cleaned.csv' WITH (FORMAT='CSV', FIRSTROW=2, FIELDQUOTE='&quot;', ROWTERMINATOR='0x0a', TABLOCK);" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\02 - TRANSFORM - Limpiar y categorizar"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Limpia Class y deriva categorías de tamaño y forma."
+      DTS:DTSID="{32E5C5AD-E20E-4CD2-B533-5809C14AB5DC}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="02 - TRANSFORM - Limpiar y categorizar"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="2">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask"
+          SQLTask:Connection="{A3CC464B-B49D-4948-A7ED-606C07495C0B}"
+          SQLTask:SqlStatementSource="SELECT Area,Perimeter,MajorAxisLength,MinorAxisLength,AspectRatio,Eccentricity,ConvexArea,EquivDiameter,Extent,Solidity,Roundness,Compactness,ShapeFactor1,ShapeFactor2,ShapeFactor3,ShapeFactor4,REPLACE(LTRIM(RTRIM(Class)),CHAR(13),'') AS Class,CASE WHEN Area&lt;45001 THEN 'Pequeno' WHEN Area&lt;70001 THEN 'Mediano' WHEN Area&lt;110001 THEN 'Grande' ELSE 'Muy Grande' END AS CategoriaTamano,CASE WHEN AspectRatio&lt;1.30 THEN 'Casi Esferica' WHEN AspectRatio&lt;1.65 THEN 'Semi-Ovalada' WHEN AspectRatio&lt;2.05 THEN 'Elongada' ELSE 'Muy Elongada' END AS CategoriaForma INTO dbo.stg_dry_beans_clean FROM dbo.stg_dry_beans;&#xA;IF (SELECT COUNT(*) FROM dbo.stg_dry_beans_clean)&lt;&gt;13543 THROW 51001,'La transformacion no produjo 13,543 registros.',1;" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\03 - LOAD - Cargar esquema estrella"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Asigna claves dimensionales y carga la tabla de hechos."
+      DTS:DTSID="{26C8E208-06D1-4EAB-B831-29DA579FB895}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="03 - LOAD - Cargar esquema estrella"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask"
+          SQLTask:Connection="{A3CC464B-B49D-4948-A7ED-606C07495C0B}"
+          SQLTask:SqlStatementSource="TRUNCATE TABLE dbo.fact_bean_morphology;&#xA;INSERT INTO dbo.fact_bean_morphology(id_variedad,id_tamano,id_forma,area,perimeter,major_axis_length,minor_axis_length,convex_area,equiv_diameter,aspect_ratio,eccentricity,extent,solidity,roundness,compactness,shape_factor_1,shape_factor_2,shape_factor_3,shape_factor_4) SELECT v.id_variedad,t.id_tamano,f.id_forma,s.Area,s.Perimeter,s.MajorAxisLength,s.MinorAxisLength,s.ConvexArea,s.EquivDiameter,s.AspectRatio,s.Eccentricity,s.Extent,s.Solidity,s.Roundness,s.Compactness,s.ShapeFactor1,s.ShapeFactor2,s.ShapeFactor3,s.ShapeFactor4 FROM dbo.stg_dry_beans_clean s JOIN dbo.dim_variedad v ON v.nombre_variedad=s.Class JOIN dbo.dim_tamano t ON t.categoria_tamano=s.CategoriaTamano JOIN dbo.dim_forma f ON f.categoria_forma=s.CategoriaForma;" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\04 - VALIDATE - Integridad y conteos"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Valida 13,543 hechos, claves y restricciones."
+      DTS:DTSID="{45C9ADE1-9CDA-45E6-AD78-C3C56AADE9F6}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="04 - VALIDATE - Integridad y conteos"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask"
+          SQLTask:Connection="{A3CC464B-B49D-4948-A7ED-606C07495C0B}"
+          SQLTask:SqlStatementSource="IF (SELECT COUNT(*) FROM dbo.fact_bean_morphology)&lt;&gt;13543 THROW 51002,'Validacion fallida: se esperaban 13,543 hechos.',1;&#xA;IF EXISTS(SELECT 1 FROM dbo.fact_bean_morphology WHERE id_variedad IS NULL OR id_tamano IS NULL OR id_forma IS NULL) THROW 51003,'Validacion fallida: existen claves dimensionales nulas.',1;&#xA;DBCC CHECKCONSTRAINTS('dbo.fact_bean_morphology') WITH ALL_CONSTRAINTS;&#xA;DROP TABLE dbo.stg_dry_beans_clean;&#xA;DROP TABLE dbo.stg_dry_beans;" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint DTS:refId="Package.PrecedenceConstraints[Extract_to_Transform]" DTS:CreationName="" DTS:DTSID="{01D7C472-AB4B-4B13-B666-B1E8D4A745A2}" DTS:From="Package\01 - EXTRACT - CSV a staging" DTS:LogicalAnd="True" DTS:ObjectName="Extract_to_Transform" DTS:To="Package\02 - TRANSFORM - Limpiar y categorizar" />
+    <DTS:PrecedenceConstraint DTS:refId="Package.PrecedenceConstraints[Transform_to_Load]" DTS:CreationName="" DTS:DTSID="{8AB50F26-68E7-4DA7-82FD-B3234BCF6189}" DTS:From="Package\02 - TRANSFORM - Limpiar y categorizar" DTS:LogicalAnd="True" DTS:ObjectName="Transform_to_Load" DTS:To="Package\03 - LOAD - Cargar esquema estrella" />
+    <DTS:PrecedenceConstraint DTS:refId="Package.PrecedenceConstraints[Load_to_Validate]" DTS:CreationName="" DTS:DTSID="{24C0EFBD-9064-4FC8-A389-E24C76D9C11F}" DTS:From="Package\03 - LOAD - Cargar esquema estrella" DTS:LogicalAnd="True" DTS:ObjectName="Load_to_Validate" DTS:To="Package\04 - VALIDATE - Integridad y conteos" />
+  </DTS:PrecedenceConstraints>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--Esta sección CDATA contiene la información de diseño del paquete. Esta sección incluye información como, por ejemplo, las coordenadas (x,y), el ancho y el alto.-->
+<!--Si edita manualmente esta sección y comete un error, puede eliminarlo. -->
+<!--El paquete podrá cargarse normalmente, pero se perderá la información de diseño anterior y el diseñador reorganizará los elementos automáticamente en la superficie de diseño.-->
+<Objects
+  Version="8">
+  <!--Cada uno de los nodos siguientes contiene propiedades que no afectan al comportamiento en tiempo de ejecución.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="260,42"
+          Id="Package\01 - EXTRACT - CSV a staging"
+          TopLeft="80,40" />
+        <NodeLayout
+          Size="185,42"
+          Id="Package\02 - TRANSFORM - Limpiar y categorizar"
+          TopLeft="80,130" />
+        <NodeLayout
+          Size="185,42"
+          Id="Package\03 - LOAD - Cargar esquema estrella"
+          TopLeft="80,220" />
+        <NodeLayout
+          Size="185,42"
+          Id="Package\04 - VALIDATE - Integridad y conteos"
+          TopLeft="80,310" />
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>

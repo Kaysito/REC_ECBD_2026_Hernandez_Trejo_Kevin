@@ -44,6 +44,8 @@ El archivo original se conserva sin modificaciones en `data/raw`. Los datos cura
 │   └── generar_graficas.py
 ├── sql/                 Data Mart dimensional para SQL Server
 │   └── schema_datamart.sql
+├── ssis/                ETL visual de Integration Services
+│   └── DryBean_ETL_SSIS/ Solucion, proyecto y paquete Package.dtsx
 ├── modelos/             Modelos serializados (.joblib)
 ├── dashboard/           Dashboard interactivo en Streamlit
 ├── outputs/             Reportes, metricas y graficos analiticos (.png, .json, .pdf)
@@ -63,6 +65,7 @@ El archivo original se conserva sin modificaciones en `data/raw`. Los datos cura
 
 1. **Unidad I (Comprension del Problema y Planeacion - 20%):** Completada. Documento en `outputs/` y marco comparativo IA / ML / Data Mining.
 2. **Unidad II (Preparacion de Datos, ETL y Data Mart - 15%):** Completada. Pipeline ETL funcional, auditoria de 68 duplicados y 0 nulos, y esquema estrella ejecutado en SQL Server 2025 LocalDB con 13,543 hechos, tres dimensiones y cero claves invalidas.
+   - **SSIS visual:** paquete de cuatro etapas conectado por restricciones de precedencia: `EXTRACT -> TRANSFORM -> LOAD -> VALIDATE`. Fue ejecutado correctamente en Visual Studio contra `DryBean_DataMart`.
    - **AE1 - Exploracion y diagnostico:** notebook ejecutado e informe PDF disponibles en `notebooks/` y `docs/`.
    - El diagnostico de AE1 trabaja exclusivamente en modo lectura sobre `data/raw/` y verifica la integridad del original mediante SHA-256.
 3. **Unidad III (Analisis Supervisado - 25%):** Completada con particion solicitada de **70% entrenamiento / 30% prueba** (9,480 / 4,063 registros).
@@ -106,3 +109,5 @@ Para abrir el dashboard:
 ```
 
 El navegador abrira normalmente `http://localhost:8501`. Los filtros del dashboard modifican la visualizacion, pero no reentrenan los modelos.
+
+Para revisar el ETL visual, abrir `ssis/DryBean_ETL_SSIS/DryBean_ETL_SSIS.slnx` en Visual Studio y ejecutar `Package.dtsx`. La guia completa se encuentra en `docs/ssis_etl_visual.md`.
