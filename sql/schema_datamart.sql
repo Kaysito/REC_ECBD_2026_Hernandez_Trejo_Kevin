@@ -6,12 +6,12 @@
 -- GESTOR OBJETIVO: Microsoft SQL Server / Compatible ANSI SQL
 -- ============================================================================
 
--- 1. CREACION DE LA BASE DE DATOS / ESQUEMA
--- IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = 'DryBean_DataMart')
---     CREATE DATABASE DryBean_DataMart;
--- GO
--- USE DryBean_DataMart;
--- GO
+-- 1. CREACION DE LA BASE DE DATOS
+IF DB_ID(N'DryBean_DataMart') IS NULL
+    CREATE DATABASE DryBean_DataMart;
+GO
+USE DryBean_DataMart;
+GO
 
 -- 2. ELIMINACION PREVIA DE TABLAS (ORDEN POR CLAVES FORANEAS)
 IF OBJECT_ID('dbo.fact_bean_morphology', 'U') IS NOT NULL DROP TABLE dbo.fact_bean_morphology;
@@ -115,18 +115,18 @@ GO
 
 INSERT INTO dbo.dim_tamano (categoria_tamano, rango_area_min, rango_area_max, descripcion)
 VALUES
-('Pequeno',        0,      45000,   'Granos compactos con area menor a 45,000 pixeles'),
-('Mediano',        45001,  70000,   'Granos estandar con area entre 45,001 y 70,000 pixeles'),
-('Grande',         70001,  110000,  'Granos grandes con area entre 70,001 y 110,000 pixeles'),
-('Muy Grande',     110001, 300000,  'Granos gigantes (ej. Bombay) superiores a 110,000 pixeles');
+('Pequeno',        0,      45001,   'Area menor o igual a 45,000 pixeles'),
+('Mediano',        45001,  70001,   'Area entre 45,001 y 70,000 pixeles'),
+('Grande',         70001,  110001,  'Area entre 70,001 y 110,000 pixeles'),
+('Muy Grande',     110001, 300001,  'Area mayor o igual a 110,001 pixeles');
 GO
 
 INSERT INTO dbo.dim_forma (categoria_forma, rango_aspect_ratio_min, rango_aspect_ratio_max, descripcion)
 VALUES
-('Casi Esferica',  1.00, 1.30, 'Granos altamente redondeados con poca elongacion'),
-('Semi-Ovalada',   1.31, 1.65, 'Granos ovalados con elongacion moderada'),
-('Elongada',       1.66, 2.05, 'Granos alargados con alta razon eje mayor/menor'),
-('Muy Elongada',   2.06, 3.50, 'Granos extremadamente cilindricos o alargados');
+('Casi Esferica',  1.00, 1.30, 'Relacion de aspecto desde 1.00 y menor que 1.30'),
+('Semi-Ovalada',   1.30, 1.65, 'Relacion de aspecto desde 1.30 y menor que 1.65'),
+('Elongada',       1.65, 2.05, 'Relacion de aspecto desde 1.65 y menor que 2.05'),
+('Muy Elongada',   2.05, 3.50, 'Relacion de aspecto desde 2.05 y menor que 3.50');
 GO
 
 -- 9. VISTAS ANALITICAS PARA CONECTIVIDAD CON POWER BI
@@ -134,13 +134,13 @@ CREATE OR ALTER VIEW dbo.vw_resumen_morfologico_variedad AS
 SELECT 
     v.nombre_variedad AS Variedad,
     COUNT(f.id_grano) AS Total_Granos,
-    ROUND(AVG(CAST(f.area AS FLOAT)), 2) AS Area_Promedio,
-    ROUND(AVG(f.perimeter), 2) AS Perimetro_Promedio,
-    ROUND(AVG(f.aspect_ratio), 4) AS AspectRatio_Promedio,
-    ROUND(AVG(f.roundness), 4) AS Redondez_Promedio,
-    ROUND(AVG(f.compactness), 4) AS Compacidad_Promedio,
-    ROUND(MIN(f.area), 0) AS Area_Minima,
-    ROUND(MAX(f.area), 0) AS Area_Maxima
+    CAST(AVG(CAST(f.area AS DECIMAL(18,2))) AS DECIMAL(18,2)) AS Area_Promedio,
+    CAST(AVG(CAST(f.perimeter AS DECIMAL(18,4))) AS DECIMAL(18,2)) AS Perimetro_Promedio,
+    CAST(AVG(CAST(f.aspect_ratio AS DECIMAL(18,6))) AS DECIMAL(18,4)) AS AspectRatio_Promedio,
+    CAST(AVG(CAST(f.roundness AS DECIMAL(18,6))) AS DECIMAL(18,4)) AS Redondez_Promedio,
+    CAST(AVG(CAST(f.compactness AS DECIMAL(18,6))) AS DECIMAL(18,4)) AS Compacidad_Promedio,
+    MIN(f.area) AS Area_Minima,
+    MAX(f.area) AS Area_Maxima
 FROM dbo.fact_bean_morphology f
 INNER JOIN dbo.dim_variedad v ON f.id_variedad = v.id_variedad
 GROUP BY v.nombre_variedad;
@@ -151,7 +151,7 @@ SELECT
     v.nombre_variedad AS Variedad,
     t.categoria_tamano AS Categoria_Tamano,
     COUNT(f.id_grano) AS Cantidad_Granos,
-    ROUND(AVG(f.solidity), 4) AS Solidez_Promedio
+    CAST(AVG(CAST(f.solidity AS DECIMAL(18,6))) AS DECIMAL(18,4)) AS Solidez_Promedio
 FROM dbo.fact_bean_morphology f
 INNER JOIN dbo.dim_variedad v ON f.id_variedad = v.id_variedad
 INNER JOIN dbo.dim_tamano t ON f.id_tamano = t.id_tamano

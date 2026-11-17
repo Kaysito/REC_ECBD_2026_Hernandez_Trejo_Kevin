@@ -62,7 +62,7 @@ El archivo original se conserva sin modificaciones en `data/raw`. Los datos cura
 ## Metodologia CRISP-DM y Estado Actual del Proyecto
 
 1. **Unidad I (Comprension del Problema y Planeacion - 20%):** Completada. Documento en `outputs/` y marco comparativo IA / ML / Data Mining.
-2. **Unidad II (Preparacion de Datos, ETL y Data Mart - 15%):** Completada. Pipeline ETL funcional, auditoria de 68 duplicados y 0 nulos, esquema estrella en SQL Server.
+2. **Unidad II (Preparacion de Datos, ETL y Data Mart - 15%):** Completada. Pipeline ETL funcional, auditoria de 68 duplicados y 0 nulos, y esquema estrella ejecutado en SQL Server 2025 LocalDB con 13,543 hechos, tres dimensiones y cero claves invalidas.
    - **AE1 - Exploracion y diagnostico:** notebook ejecutado e informe PDF disponibles en `notebooks/` y `docs/`.
    - El diagnostico de AE1 trabaja exclusivamente en modo lectura sobre `data/raw/` y verifica la integridad del original mediante SHA-256.
 3. **Unidad III (Analisis Supervisado - 25%):** Completada con particion solicitada de **70% entrenamiento / 30% prueba** (9,480 / 4,063 registros).
