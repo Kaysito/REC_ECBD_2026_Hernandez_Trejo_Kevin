@@ -1,0 +1,33 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 40,
+            "y": 40
+          },
+          "nodeIndex": "DryBean_Analitica",
+          "size": {
+            "height": 260,
+            "width": 220
+          },
+          "zIndex": 1
+        }
+      ],
+      "name": "Modelo estrella",
+      "zoomValue": 85,
+      "pinKeyFieldsToTop": true,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false
+    }
+  ],
+  "selectedDiagram": "Modelo estrella",
+  "defaultDiagram": "Modelo estrella"
+}

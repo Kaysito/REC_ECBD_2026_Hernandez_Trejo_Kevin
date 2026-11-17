@@ -1,0 +1,12 @@
+{
+  "name": "area",
+  "dataType": "int64",
+  "sourceColumn": "area",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "User"
+    }
+  ]
+}

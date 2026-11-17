@@ -1,0 +1,12 @@
+{
+  "name": "id_grano",
+  "dataType": "int64",
+  "sourceColumn": "id_grano",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "User"
+    }
+  ]
+}

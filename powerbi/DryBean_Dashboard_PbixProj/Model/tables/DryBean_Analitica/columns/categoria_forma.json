@@ -1,0 +1,12 @@
+{
+  "name": "categoria_forma",
+  "dataType": "string",
+  "sourceColumn": "categoria_forma",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "User"
+    }
+  ]
+}

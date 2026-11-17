@@ -1,0 +1,12 @@
+{
+  "name": "id_tamano",
+  "dataType": "int64",
+  "sourceColumn": "id_tamano",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "User"
+    }
+  ]
+}

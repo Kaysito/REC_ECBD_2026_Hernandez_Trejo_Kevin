@@ -1,0 +1,12 @@
+{
+  "name": "eccentricity",
+  "dataType": "double",
+  "sourceColumn": "eccentricity",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "User"
+    }
+  ]
+}

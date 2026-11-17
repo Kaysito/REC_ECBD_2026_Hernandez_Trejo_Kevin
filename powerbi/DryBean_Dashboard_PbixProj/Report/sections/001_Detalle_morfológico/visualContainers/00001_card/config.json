@@ -1,0 +1,50 @@
+{
+  "name": "p2card00000000000001",
+  "layouts": [
+    {
+      "id": 0,
+      "position": {
+        "x": 285,
+        "y": 25,
+        "z": 1,
+        "width": 225,
+        "height": 90
+      }
+    }
+  ],
+  "singleVisual": {
+    "visualType": "card",
+    "projections": {
+      "Values": [
+        {
+          "queryRef": "DryBean_Analitica.Solidez Promedio"
+        }
+      ]
+    },
+    "prototypeQuery": {
+      "Version": 2,
+      "From": [
+        {
+          "Name": "f",
+          "Entity": "DryBean_Analitica",
+          "Type": 0
+        }
+      ],
+      "Select": [
+        {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "f"
+              }
+            },
+            "Property": "Solidez Promedio"
+          },
+          "Name": "DryBean_Analitica.Solidez Promedio",
+          "NativeReferenceName": "Solidez Promedio"
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

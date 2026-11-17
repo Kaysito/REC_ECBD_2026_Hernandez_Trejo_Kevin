@@ -1,0 +1,12 @@
+{
+  "name": "roundness",
+  "dataType": "double",
+  "sourceColumn": "roundness",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "User"
+    }
+  ]
+}

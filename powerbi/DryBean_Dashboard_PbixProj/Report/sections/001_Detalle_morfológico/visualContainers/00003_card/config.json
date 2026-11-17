@@ -1,0 +1,50 @@
+{
+  "name": "p2card00000000000003",
+  "layouts": [
+    {
+      "id": 0,
+      "position": {
+        "x": 795,
+        "y": 25,
+        "z": 3,
+        "width": 225,
+        "height": 90
+      }
+    }
+  ],
+  "singleVisual": {
+    "visualType": "card",
+    "projections": {
+      "Values": [
+        {
+          "queryRef": "DryBean_Analitica.Area Maxima"
+        }
+      ]
+    },
+    "prototypeQuery": {
+      "Version": 2,
+      "From": [
+        {
+          "Name": "f",
+          "Entity": "DryBean_Analitica",
+          "Type": 0
+        }
+      ],
+      "Select": [
+        {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "f"
+              }
+            },
+            "Property": "Area Maxima"
+          },
+          "Name": "DryBean_Analitica.Area Maxima",
+          "NativeReferenceName": "Area Maxima"
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

@@ -46,7 +46,7 @@ El archivo original se conserva sin modificaciones en `data/raw`. Los datos cura
 │   └── schema_datamart.sql
 ├── ssis/                ETL visual de Integration Services
 │   └── DryBean_ETL_SSIS/ Solucion, proyecto y paquete Package.dtsx
-├── powerbi/             Tema, medidas DAX y diseño del dashboard BI
+├── powerbi/             Dashboard final PBIX/PBIT, DAX y fuentes versionables
 ├── data/datamart/       Copia SQLite portátil del esquema estrella
 ├── data/bi/             Vistas CSV listas para Power BI
 ├── modelos/             Modelos serializados (.joblib)
@@ -85,7 +85,7 @@ El archivo original se conserva sin modificaciones en `data/raw`. Los datos cura
    - Evaluacion K-means de k=2 a k=10 mediante codo y silhouette.
    - Mejor resultado interno: k=3, silhouette=0.4203.
    - Comparacion interpretativa con `Class`: ARI=0.2964 y NMI=0.4837; la clase no participa en el entrenamiento.
-5. **Unidad V (Visualizacion y Cierre - 15%):** Dashboard ejecutivo funcional en Streamlit con indicadores, filtros y resultados supervisados/no supervisados. Se incluyen tema, medidas DAX y vistas de importación para Power BI.
+5. **Unidad V (Visualizacion y Cierre - 15%):** Dashboard ejecutivo funcional en Streamlit y dashboard terminado en Power BI. El informe de Power BI usa una sola tabla analítica, dos páginas, 19 visuales, 9 medidas DAX y filtros interactivos; el modelo estrella permanece documentado por separado en SQL Server y SQLite.
 
 ---
 
@@ -122,3 +122,5 @@ Para regenerar la copia SQLite y los archivos de Power BI:
 ```
 
 SQL Server permanece como origen oficial; SQLite conserva las mismas dimensiones, claves foráneas e índices como respaldo portátil.
+
+El tablero final se abre directamente desde `powerbi/Hernandez_Trejo_Kevin_Dashboard_DryBean.pbix`. La guía de demostración y respuestas para la revisión se encuentra en `docs/guia_powerbi_exposicion.md`.

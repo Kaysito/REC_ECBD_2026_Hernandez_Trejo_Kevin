@@ -1,0 +1,50 @@
+{
+  "name": "slicer00000000000000",
+  "layouts": [
+    {
+      "id": 0,
+      "position": {
+        "x": 30,
+        "y": 410,
+        "z": 7,
+        "width": 190,
+        "height": 260
+      }
+    }
+  ],
+  "singleVisual": {
+    "visualType": "slicer",
+    "projections": {
+      "Values": [
+        {
+          "queryRef": "DryBean_Analitica.variedad"
+        }
+      ]
+    },
+    "prototypeQuery": {
+      "Version": 2,
+      "From": [
+        {
+          "Name": "f",
+          "Entity": "DryBean_Analitica",
+          "Type": 0
+        }
+      ],
+      "Select": [
+        {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "f"
+              }
+            },
+            "Property": "variedad"
+          },
+          "Name": "DryBean_Analitica.variedad",
+          "NativeReferenceName": "variedad"
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

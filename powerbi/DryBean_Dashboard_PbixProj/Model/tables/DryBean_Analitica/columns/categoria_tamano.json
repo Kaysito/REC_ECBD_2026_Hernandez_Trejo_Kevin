@@ -1,0 +1,12 @@
+{
+  "name": "categoria_tamano",
+  "dataType": "string",
+  "sourceColumn": "categoria_tamano",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "User"
+    }
+  ]
+}

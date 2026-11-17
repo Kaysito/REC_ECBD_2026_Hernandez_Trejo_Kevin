@@ -1,0 +1,12 @@
+{
+  "name": "id_forma",
+  "dataType": "int64",
+  "sourceColumn": "id_forma",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "User"
+    }
+  ]
+}

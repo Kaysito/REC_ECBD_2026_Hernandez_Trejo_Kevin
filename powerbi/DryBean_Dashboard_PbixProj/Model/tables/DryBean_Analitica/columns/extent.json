@@ -1,0 +1,12 @@
+{
+  "name": "extent",
+  "dataType": "double",
+  "sourceColumn": "extent",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "User"
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "name": "slicer00000000000002",
+  "layouts": [
+    {
+      "id": 0,
+      "position": {
+        "x": 450,
+        "y": 410,
+        "z": 9,
+        "width": 190,
+        "height": 260
+      }
+    }
+  ],
+  "singleVisual": {
+    "visualType": "slicer",
+    "projections": {
+      "Values": [
+        {
+          "queryRef": "DryBean_Analitica.categoria_forma"
+        }
+      ]
+    },
+    "prototypeQuery": {
+      "Version": 2,
+      "From": [
+        {
+          "Name": "f",
+          "Entity": "DryBean_Analitica",
+          "Type": 0
+        }
+      ],
+      "Select": [
+        {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "f"
+              }
+            },
+            "Property": "categoria_forma"
+          },
+          "Name": "DryBean_Analitica.categoria_forma",
+          "NativeReferenceName": "categoria_forma"
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

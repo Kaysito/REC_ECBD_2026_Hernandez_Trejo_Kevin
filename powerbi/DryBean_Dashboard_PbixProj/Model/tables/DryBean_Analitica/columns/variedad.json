@@ -1,0 +1,12 @@
+{
+  "name": "variedad",
+  "dataType": "string",
+  "sourceColumn": "variedad",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "User"
+    }
+  ]
+}

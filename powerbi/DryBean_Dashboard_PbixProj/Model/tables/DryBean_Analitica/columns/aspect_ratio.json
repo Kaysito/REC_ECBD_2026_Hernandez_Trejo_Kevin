@@ -1,0 +1,12 @@
+{
+  "name": "aspect_ratio",
+  "dataType": "double",
+  "sourceColumn": "aspect_ratio",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "User"
+    }
+  ]
+}

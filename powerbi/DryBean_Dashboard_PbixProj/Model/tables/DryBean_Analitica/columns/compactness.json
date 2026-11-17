@@ -1,0 +1,12 @@
+{
+  "name": "compactness",
+  "dataType": "double",
+  "sourceColumn": "compactness",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "User"
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "name": "p2card00000000000002",
+  "layouts": [
+    {
+      "id": 0,
+      "position": {
+        "x": 540,
+        "y": 25,
+        "z": 2,
+        "width": 225,
+        "height": 90
+      }
+    }
+  ],
+  "singleVisual": {
+    "visualType": "card",
+    "projections": {
+      "Values": [
+        {
+          "queryRef": "DryBean_Analitica.Area Minima"
+        }
+      ]
+    },
+    "prototypeQuery": {
+      "Version": 2,
+      "From": [
+        {
+          "Name": "f",
+          "Entity": "DryBean_Analitica",
+          "Type": 0
+        }
+      ],
+      "Select": [
+        {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "f"
+              }
+            },
+            "Property": "Area Minima"
+          },
+          "Name": "DryBean_Analitica.Area Minima",
+          "NativeReferenceName": "Area Minima"
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

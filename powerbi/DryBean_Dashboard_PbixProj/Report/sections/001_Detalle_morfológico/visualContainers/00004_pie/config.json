@@ -1,0 +1,67 @@
+{
+  "name": "pie00000000000000001",
+  "layouts": [
+    {
+      "id": 0,
+      "position": {
+        "x": 30,
+        "y": 145,
+        "z": 4,
+        "width": 390,
+        "height": 245
+      }
+    }
+  ],
+  "singleVisual": {
+    "visualType": "donutChart",
+    "projections": {
+      "Category": [
+        {
+          "queryRef": "DryBean_Analitica.categoria_tamano"
+        }
+      ],
+      "Y": [
+        {
+          "queryRef": "DryBean_Analitica.Total Granos"
+        }
+      ]
+    },
+    "prototypeQuery": {
+      "Version": 2,
+      "From": [
+        {
+          "Name": "f",
+          "Entity": "DryBean_Analitica",
+          "Type": 0
+        }
+      ],
+      "Select": [
+        {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "f"
+              }
+            },
+            "Property": "categoria_tamano"
+          },
+          "Name": "DryBean_Analitica.categoria_tamano",
+          "NativeReferenceName": "categoria_tamano"
+        },
+        {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "f"
+              }
+            },
+            "Property": "Total Granos"
+          },
+          "Name": "DryBean_Analitica.Total Granos",
+          "NativeReferenceName": "Total Granos"
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

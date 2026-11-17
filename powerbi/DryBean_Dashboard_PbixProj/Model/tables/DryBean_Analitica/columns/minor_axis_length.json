@@ -1,0 +1,12 @@
+{
+  "name": "minor_axis_length",
+  "dataType": "double",
+  "sourceColumn": "minor_axis_length",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "User"
+    }
+  ]
+}

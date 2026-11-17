@@ -1,0 +1,82 @@
+{
+  "name": "p2col000000000000001",
+  "layouts": [
+    {
+      "id": 0,
+      "position": {
+        "x": 860,
+        "y": 145,
+        "z": 6,
+        "width": 390,
+        "height": 245
+      }
+    }
+  ],
+  "singleVisual": {
+    "visualType": "clusteredColumnChart",
+    "projections": {
+      "Category": [
+        {
+          "queryRef": "DryBean_Analitica.variedad"
+        }
+      ],
+      "Y": [
+        {
+          "queryRef": "DryBean_Analitica.Compacidad Promedio"
+        },
+        {
+          "queryRef": "DryBean_Analitica.Redondez Promedio"
+        }
+      ]
+    },
+    "prototypeQuery": {
+      "Version": 2,
+      "From": [
+        {
+          "Name": "f",
+          "Entity": "DryBean_Analitica",
+          "Type": 0
+        }
+      ],
+      "Select": [
+        {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "f"
+              }
+            },
+            "Property": "variedad"
+          },
+          "Name": "DryBean_Analitica.variedad",
+          "NativeReferenceName": "variedad"
+        },
+        {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "f"
+              }
+            },
+            "Property": "Compacidad Promedio"
+          },
+          "Name": "DryBean_Analitica.Compacidad Promedio",
+          "NativeReferenceName": "Compacidad Promedio"
+        },
+        {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "f"
+              }
+            },
+            "Property": "Redondez Promedio"
+          },
+          "Name": "DryBean_Analitica.Redondez Promedio",
+          "NativeReferenceName": "Redondez Promedio"
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "name": "convex_area",
+  "dataType": "int64",
+  "sourceColumn": "convex_area",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "User"
+    }
+  ]
+}

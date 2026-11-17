@@ -1,0 +1,12 @@
+{
+  "name": "perimeter",
+  "dataType": "double",
+  "sourceColumn": "perimeter",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "User"
+    }
+  ]
+}

@@ -1,0 +1,140 @@
+{
+  "name": "p2table00000000000001",
+  "layouts": [
+    {
+      "id": 0,
+      "position": {
+        "x": 30,
+        "y": 420,
+        "z": 7,
+        "width": 1220,
+        "height": 250
+      }
+    }
+  ],
+  "singleVisual": {
+    "visualType": "tableEx",
+    "projections": {
+      "Values": [
+        {
+          "queryRef": "DryBean_Analitica.variedad"
+        },
+        {
+          "queryRef": "DryBean_Analitica.Total Granos"
+        },
+        {
+          "queryRef": "DryBean_Analitica.Area Promedio"
+        },
+        {
+          "queryRef": "DryBean_Analitica.Perimetro Promedio"
+        },
+        {
+          "queryRef": "DryBean_Analitica.Redondez Promedio"
+        },
+        {
+          "queryRef": "DryBean_Analitica.Compacidad Promedio"
+        },
+        {
+          "queryRef": "DryBean_Analitica.Solidez Promedio"
+        }
+      ]
+    },
+    "prototypeQuery": {
+      "Version": 2,
+      "From": [
+        {
+          "Name": "f",
+          "Entity": "DryBean_Analitica",
+          "Type": 0
+        }
+      ],
+      "Select": [
+        {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "f"
+              }
+            },
+            "Property": "variedad"
+          },
+          "Name": "DryBean_Analitica.variedad",
+          "NativeReferenceName": "variedad"
+        },
+        {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "f"
+              }
+            },
+            "Property": "Total Granos"
+          },
+          "Name": "DryBean_Analitica.Total Granos",
+          "NativeReferenceName": "Total Granos"
+        },
+        {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "f"
+              }
+            },
+            "Property": "Area Promedio"
+          },
+          "Name": "DryBean_Analitica.Area Promedio",
+          "NativeReferenceName": "Area Promedio"
+        },
+        {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "f"
+              }
+            },
+            "Property": "Perimetro Promedio"
+          },
+          "Name": "DryBean_Analitica.Perimetro Promedio",
+          "NativeReferenceName": "Perimetro Promedio"
+        },
+        {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "f"
+              }
+            },
+            "Property": "Redondez Promedio"
+          },
+          "Name": "DryBean_Analitica.Redondez Promedio",
+          "NativeReferenceName": "Redondez Promedio"
+        },
+        {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "f"
+              }
+            },
+            "Property": "Compacidad Promedio"
+          },
+          "Name": "DryBean_Analitica.Compacidad Promedio",
+          "NativeReferenceName": "Compacidad Promedio"
+        },
+        {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "f"
+              }
+            },
+            "Property": "Solidez Promedio"
+          },
+          "Name": "DryBean_Analitica.Solidez Promedio",
+          "NativeReferenceName": "Solidez Promedio"
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

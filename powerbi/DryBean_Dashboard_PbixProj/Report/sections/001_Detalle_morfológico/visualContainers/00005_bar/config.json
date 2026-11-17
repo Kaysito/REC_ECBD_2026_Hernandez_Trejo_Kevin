@@ -1,0 +1,67 @@
+{
+  "name": "p2bar000000000000001",
+  "layouts": [
+    {
+      "id": 0,
+      "position": {
+        "x": 440,
+        "y": 145,
+        "z": 5,
+        "width": 400,
+        "height": 245
+      }
+    }
+  ],
+  "singleVisual": {
+    "visualType": "clusteredBarChart",
+    "projections": {
+      "Category": [
+        {
+          "queryRef": "DryBean_Analitica.categoria_forma"
+        }
+      ],
+      "Y": [
+        {
+          "queryRef": "DryBean_Analitica.Total Granos"
+        }
+      ]
+    },
+    "prototypeQuery": {
+      "Version": 2,
+      "From": [
+        {
+          "Name": "f",
+          "Entity": "DryBean_Analitica",
+          "Type": 0
+        }
+      ],
+      "Select": [
+        {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "f"
+              }
+            },
+            "Property": "categoria_forma"
+          },
+          "Name": "DryBean_Analitica.categoria_forma",
+          "NativeReferenceName": "categoria_forma"
+        },
+        {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "f"
+              }
+            },
+            "Property": "Total Granos"
+          },
+          "Name": "DryBean_Analitica.Total Granos",
+          "NativeReferenceName": "Total Granos"
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

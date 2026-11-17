@@ -1,0 +1,28 @@
+{
+  "name": "DryBean_ECBD_Kevin",
+  "compatibilityLevel": 1550,
+  "model": {
+    "culture": "es-MX",
+    "dataAccessOptions": {
+      "legacyRedirects": true,
+      "returnErrorValuesAsNull": true
+    },
+    "defaultPowerBIDataSourceVersion": "powerBI_V3",
+    "sourceQueryCulture": "es-MX",
+    "relationships": [],
+    "annotations": [
+      {
+        "name": "__PBI_TimeIntelligenceEnabled",
+        "value": "0"
+      },
+      {
+        "name": "PBIDesktopVersion",
+        "value": "2.159.1231.0 (26.10)"
+      },
+      {
+        "name": "PBI_QueryOrder",
+        "value": "[\"DryBean_Analitica\"]"
+      }
+    ]
+  }
+}

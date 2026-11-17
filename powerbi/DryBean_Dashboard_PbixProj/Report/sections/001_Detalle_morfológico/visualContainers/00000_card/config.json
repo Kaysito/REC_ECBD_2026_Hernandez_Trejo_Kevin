@@ -1,0 +1,50 @@
+{
+  "name": "p2card00000000000000",
+  "layouts": [
+    {
+      "id": 0,
+      "position": {
+        "x": 30,
+        "y": 25,
+        "z": 0,
+        "width": 225,
+        "height": 90
+      }
+    }
+  ],
+  "singleVisual": {
+    "visualType": "card",
+    "projections": {
+      "Values": [
+        {
+          "queryRef": "DryBean_Analitica.Perimetro Promedio"
+        }
+      ]
+    },
+    "prototypeQuery": {
+      "Version": 2,
+      "From": [
+        {
+          "Name": "f",
+          "Entity": "DryBean_Analitica",
+          "Type": 0
+        }
+      ],
+      "Select": [
+        {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "f"
+              }
+            },
+            "Property": "Perimetro Promedio"
+          },
+          "Name": "DryBean_Analitica.Perimetro Promedio",
+          "NativeReferenceName": "Perimetro Promedio"
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

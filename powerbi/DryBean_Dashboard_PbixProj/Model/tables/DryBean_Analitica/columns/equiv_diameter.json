@@ -1,0 +1,12 @@
+{
+  "name": "equiv_diameter",
+  "dataType": "double",
+  "sourceColumn": "equiv_diameter",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "User"
+    }
+  ]
+}

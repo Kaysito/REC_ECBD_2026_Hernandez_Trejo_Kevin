@@ -1,0 +1,67 @@
+{
+  "name": "col00000000000000002",
+  "layouts": [
+    {
+      "id": 0,
+      "position": {
+        "x": 640,
+        "y": 140,
+        "z": 6,
+        "width": 610,
+        "height": 245
+      }
+    }
+  ],
+  "singleVisual": {
+    "visualType": "clusteredColumnChart",
+    "projections": {
+      "Category": [
+        {
+          "queryRef": "DryBean_Analitica.variedad"
+        }
+      ],
+      "Y": [
+        {
+          "queryRef": "DryBean_Analitica.Area Promedio"
+        }
+      ]
+    },
+    "prototypeQuery": {
+      "Version": 2,
+      "From": [
+        {
+          "Name": "f",
+          "Entity": "DryBean_Analitica",
+          "Type": 0
+        }
+      ],
+      "Select": [
+        {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "f"
+              }
+            },
+            "Property": "variedad"
+          },
+          "Name": "DryBean_Analitica.variedad",
+          "NativeReferenceName": "variedad"
+        },
+        {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "f"
+              }
+            },
+            "Property": "Area Promedio"
+          },
+          "Name": "DryBean_Analitica.Area Promedio",
+          "NativeReferenceName": "Area Promedio"
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

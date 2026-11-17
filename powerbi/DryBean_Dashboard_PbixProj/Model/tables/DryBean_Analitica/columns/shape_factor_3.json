@@ -1,0 +1,12 @@
+{
+  "name": "shape_factor_3",
+  "dataType": "double",
+  "sourceColumn": "shape_factor_3",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "User"
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "name": "card0000000000000004",
+  "layouts": [
+    {
+      "id": 0,
+      "position": {
+        "x": 1050,
+        "y": 25,
+        "z": 4,
+        "width": 225,
+        "height": 90
+      }
+    }
+  ],
+  "singleVisual": {
+    "visualType": "card",
+    "projections": {
+      "Values": [
+        {
+          "queryRef": "DryBean_Analitica.Compacidad Promedio"
+        }
+      ]
+    },
+    "prototypeQuery": {
+      "Version": 2,
+      "From": [
+        {
+          "Name": "f",
+          "Entity": "DryBean_Analitica",
+          "Type": 0
+        }
+      ],
+      "Select": [
+        {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "f"
+              }
+            },
+            "Property": "Compacidad Promedio"
+          },
+          "Name": "DryBean_Analitica.Compacidad Promedio",
+          "NativeReferenceName": "Compacidad Promedio"
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}
