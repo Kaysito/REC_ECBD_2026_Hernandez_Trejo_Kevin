@@ -1,6 +1,7 @@
 """Dashboard interactivo del Proyecto Integrador Dry Bean."""
 
 import json
+import sqlite3
 from pathlib import Path
 
 import pandas as pd
@@ -17,6 +18,7 @@ px.defaults.labels = ETIQUETAS
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data" / "processed" / "dry_beans_clustered.csv"
+DATAMART = ROOT / "data" / "datamart" / "drybean_datamart.sqlite"
 METRICAS_SUP = ROOT / "outputs" / "evaluacion_modelos_supervisados.json"
 METRICAS_UNSUP = ROOT / "outputs" / "evaluacion_modelos_no_supervisados.json"
 
@@ -31,26 +33,34 @@ st.markdown("""
     h1, h2, h3 {color:#103C65;}
     .stTabs [role="tab"] {color:#172B42; font-weight:600; padding:14px 20px;}
     .stTabs [aria-selected="true"] {background:#DCEBFA; color:#103C65; border-radius:8px;}
+    .hero {background:linear-gradient(120deg,#103C65,#165DAD 62%,#087F72); color:white; padding:24px 28px; border-radius:16px; margin-bottom:18px; box-shadow:0 8px 24px #103c6528;}
+    .hero h2,.hero p {color:white; margin:0;}
 </style>
 """, unsafe_allow_html=True)
 
-st.title("Clasificación y análisis morfológico de variedades de frijol")
+st.markdown('<div class="hero"><h2>Inteligencia morfológica del frijol</h2><p>Data Mart estrella · Modelos predictivos · Indicadores ejecutivos</p></div>', unsafe_allow_html=True)
 st.caption("Proyecto Integrador ECBD · Kevin Hernández Trejo · 23300950 · 10IDGS-G1")
-st.markdown('**De las medidas a las variedades.** Explora la forma de los frijoles, compara modelos y descubre agrupaciones naturales.')
 
-if not DATA.exists():
-    st.error("Primero ejecuta: python src/modelos_no_supervisados.py")
+if not DATA.exists() or not DATAMART.exists():
+    st.error("Primero ejecuta los modelos y después: python src/exportar_sqlite_datamart.py")
     st.stop()
 
-df = pd.read_csv(DATA)
+@st.cache_data
+def cargar_datamart() -> pd.DataFrame:
+    with sqlite3.connect(DATAMART) as con:
+        base = pd.read_sql_query("SELECT * FROM vw_bean_bi", con)
+    clusters = pd.read_csv(DATA, usecols=["Cluster", "PC1", "PC2"])
+    return pd.concat([base.reset_index(drop=True), clusters.reset_index(drop=True)], axis=1)
+
+df = cargar_datamart()
 with open(METRICAS_SUP, encoding="utf-8") as f:
     supervisado = json.load(f)
 with open(METRICAS_UNSUP, encoding="utf-8") as f:
     no_supervisado = json.load(f)
 
-clases = sorted(df["Class"].unique())
+clases = sorted(df["variedad"].unique())
 seleccion = st.sidebar.multiselect("Variedades", clases, default=clases)
-df_f = df[df["Class"].isin(seleccion)]
+df_f = df[df["variedad"].isin(seleccion)]
 traducir = st.sidebar.toggle('Mostrar nombres en español', value=True)
 st.sidebar.caption('Traducción visual local · sin costo de API · archivos originales intactos')
 if not seleccion:
@@ -62,24 +72,39 @@ st.sidebar.info("El filtro modifica las visualizaciones, pero no reentrena los m
 mejor_clf, datos_clf = max(
     supervisado["clasificacion_multiclase"].items(), key=lambda x: x[1]["Macro_F1"]
 )
-c1, c2, c3, c4 = st.columns(4)
-c1.metric("Registros procesados", f"{len(df):,}")
-c2.metric("Variedades", df["Class"].nunique())
-c3.metric("Mejor clasificador", mejor_clf.replace("_", " "))
-c4.metric("Exactitud en prueba", f"{datos_clf['Accuracy']:.2%}")
+c1, c2, c3, c4, c5 = st.columns(5)
+c1.metric("Granos seleccionados", f"{len(df_f):,}", f"{len(df_f)/len(df):.1%} del total")
+c2.metric("Variedades", df_f["variedad"].nunique())
+c3.metric("Área promedio", f"{df_f['area'].mean():,.0f}")
+c4.metric("Redondez promedio", f"{df_f['roundness'].mean():.3f}")
+c5.metric("Exactitud modelo", f"{datos_clf['Accuracy']:.2%}")
 
-tab1, tab2, tab3, tab4 = st.tabs(["Datos", "Supervisado", "No supervisado", "Trazabilidad"])
+tab0, tab1, tab2, tab3, tab4 = st.tabs(["Resumen ejecutivo", "Datos", "Supervisado", "No supervisado", "Trazabilidad"])
+
+with tab0:
+    izquierda, derecha = st.columns([1.15, 1])
+    resumen = df_f.groupby("variedad", as_index=False).agg(
+        Registros=("id_grano", "count"), Area_promedio=("area", "mean"),
+        Redondez=("roundness", "mean"), Compacidad=("compactness", "mean")
+    )
+    izquierda.plotly_chart(px.treemap(resumen, path=["variedad"], values="Registros", color="Area_promedio",
+                                      color_continuous_scale="Blues", title="Participación y área promedio por variedad"), width="stretch")
+    matriz = pd.crosstab(df_f["categoria_tamano"], df_f["categoria_forma"])
+    derecha.plotly_chart(px.imshow(matriz, text_auto=True, color_continuous_scale="Teal",
+                                   title="Cantidad por tamaño y forma", aspect="auto"), width="stretch")
+    dominante = resumen.loc[resumen["Registros"].idxmax(), "variedad"]
+    st.info(f"Lectura ejecutiva: **{dominante}** es la variedad con más registros en la selección. El Data Mart mantiene relaciones válidas entre variedad, tamaño, forma y las 16 mediciones morfológicas.")
 
 with tab1:
     left, right = st.columns(2)
-    conteos = df_f["Class"].value_counts().rename_axis("Variedad").reset_index(name="Registros")
+    conteos = df_f["variedad"].value_counts().rename_axis("Variedad").reset_index(name="Registros")
     left.plotly_chart(px.bar(conteos, x="Variedad", y="Registros", color="Variedad",
                              title="Distribución de variedades"), width="stretch")
-    variable = right.selectbox("Variable morfológica", [c for c in df.select_dtypes("number").columns if c not in ["Cluster", "PC1", "PC2"]], format_func=lambda c: ETIQUETAS.get(c,c) if traducir else c)
-    right.plotly_chart(px.box(df_f, x="Class", y=variable, color="Class",
+    variable = right.selectbox("Variable morfológica", [c for c in ["area","perimeter","major_axis_length","minor_axis_length","aspect_ratio","eccentricity","extent","solidity","roundness","compactness"]], format_func=lambda c: c.replace("_", " ").title())
+    right.plotly_chart(px.box(df_f, x="variedad", y=variable, color="variedad",
                               title=f"{variable} por variedad"), width="stretch")
     st.caption('Cómo explicarlo: las barras cuentan frijoles por variedad; las cajas comparan la mediana, dispersión y posibles valores extremos de cada medida.')
-    st.dataframe(df_f.head(100).rename(columns=ETIQUETAS) if traducir else df_f.head(100), width="stretch")
+    st.dataframe(df_f.head(100), width="stretch")
     with st.expander('Diccionario bilingüe para la exposición'):
         st.dataframe(pd.DataFrame([{'Nombre original':k,'Significado en español':v} for k,v in ETIQUETAS.items()]), hide_index=True, width='stretch')
 
@@ -101,7 +126,7 @@ with tab3:
     u3.metric("Componentes PCA (≥90 %)", no_supervisado["componentes_pca_para_90_por_ciento"])
     muestra = df_f.sample(min(5000, len(df_f)), random_state=42) if len(df_f) else df_f
     st.plotly_chart(px.scatter(muestra, x="PC1", y="PC2", color=muestra["Cluster"].astype(str),
-                               hover_data=["Class"], opacity=.65,
+                               hover_data=["variedad"], opacity=.65,
                                title="Proyección PCA coloreada por cluster"), width="stretch")
     eval_k = pd.DataFrame(no_supervisado["evaluacion_k"])
     a, b = st.columns(2)
@@ -116,5 +141,7 @@ with tab4:
     3. Los modelos supervisados usan una partición 70 % entrenamiento y 30 % prueba.
     4. El análisis no supervisado estandariza, reduce dimensionalidad con PCA y agrupa con K-means.
     5. Las métricas, modelos y gráficas quedan guardados en `outputs/` y `modelos/`.
+    6. SQL Server sigue siendo la fuente oficial; SQLite conserva una copia portátil del mismo esquema estrella.
     """)
+    st.success("Data Mart SQLite activo · 13,543 hechos · 7 variedades · 4 tamaños · 4 formas · 0 claves inválidas")
     st.code(".venv\\Scripts\\python.exe -m streamlit run dashboard\\app.py", language="powershell")

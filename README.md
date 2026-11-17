@@ -46,6 +46,9 @@ El archivo original se conserva sin modificaciones en `data/raw`. Los datos cura
 │   └── schema_datamart.sql
 ├── ssis/                ETL visual de Integration Services
 │   └── DryBean_ETL_SSIS/ Solucion, proyecto y paquete Package.dtsx
+├── powerbi/             Tema, medidas DAX y diseño del dashboard BI
+├── data/datamart/       Copia SQLite portátil del esquema estrella
+├── data/bi/             Vistas CSV listas para Power BI
 ├── modelos/             Modelos serializados (.joblib)
 ├── dashboard/           Dashboard interactivo en Streamlit
 ├── outputs/             Reportes, metricas y graficos analiticos (.png, .json, .pdf)
@@ -82,7 +85,7 @@ El archivo original se conserva sin modificaciones en `data/raw`. Los datos cura
    - Evaluacion K-means de k=2 a k=10 mediante codo y silhouette.
    - Mejor resultado interno: k=3, silhouette=0.4203.
    - Comparacion interpretativa con `Class`: ARI=0.2964 y NMI=0.4837; la clase no participa en el entrenamiento.
-5. **Unidad V (Visualizacion y Cierre - 15%):** Dashboard preliminar funcional en Streamlit con filtros, indicadores y resultados supervisados/no supervisados.
+5. **Unidad V (Visualizacion y Cierre - 15%):** Dashboard ejecutivo funcional en Streamlit con indicadores, filtros y resultados supervisados/no supervisados. Se incluyen tema, medidas DAX y vistas de importación para Power BI.
 
 ---
 
@@ -111,3 +114,11 @@ Para abrir el dashboard:
 El navegador abrira normalmente `http://localhost:8501`. Los filtros del dashboard modifican la visualizacion, pero no reentrenan los modelos.
 
 Para revisar el ETL visual, abrir `ssis/DryBean_ETL_SSIS/DryBean_ETL_SSIS.slnx` en Visual Studio y ejecutar `Package.dtsx`. La guia completa se encuentra en `docs/ssis_etl_visual.md`.
+
+Para regenerar la copia SQLite y los archivos de Power BI:
+
+```powershell
+.venv\Scripts\python.exe src\exportar_sqlite_datamart.py
+```
+
+SQL Server permanece como origen oficial; SQLite conserva las mismas dimensiones, claves foráneas e índices como respaldo portátil.

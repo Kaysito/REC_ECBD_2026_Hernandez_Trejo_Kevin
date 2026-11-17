@@ -1,0 +1,15 @@
+{
+  "name": "Dry Bean ECBD",
+  "dataColors": ["#165DAD", "#087F72", "#C45100", "#763C9F", "#AC2450", "#596B12", "#39465E"],
+  "background": "#F3F6FA",
+  "foreground": "#172B42",
+  "tableAccent": "#165DAD",
+  "visualStyles": {
+    "*": {
+      "*": {
+        "title": [{"show": true, "fontColor": {"solid": {"color": "#103C65"}, "fontSize": 13}],
+        "background": [{"show": true, "color": {"solid": {"color": "#FFFFFF"}}, "transparency": 0}]
+      }
+    }
+  }
+}
