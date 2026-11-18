@@ -63,13 +63,64 @@
       </DTS:ObjectData>
     </DTS:Executable>
     <DTS:Executable
-      DTS:refId="Package\03 - LOAD - Cargar esquema estrella"
+      DTS:refId="Package\03A - DIMENSION - DimVariedad"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Comprueba que las 7 variedades de staging existan en DimVariedad."
+      DTS:DTSID="{0CE99F58-E623-48B6-A845-00CD53AA90B1}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="03A - DIMENSION - DimVariedad"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="3">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask"
+          SQLTask:Connection="{A3CC464B-B49D-4948-A7ED-606C07495C0B}"
+          SQLTask:SqlStatementSource="IF EXISTS (SELECT DISTINCT s.Class FROM dbo.stg_dry_beans_clean s LEFT JOIN dbo.dim_variedad d ON d.nombre_variedad=s.Class WHERE d.id_variedad IS NULL) THROW 51011,'DimVariedad no contiene todas las clases de staging.',1;" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\03B - DIMENSION - DimTamano"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Comprueba que las 4 categorías de tamaño existan en DimTamano."
+      DTS:DTSID="{5D3B768F-6EED-4FD1-83CC-C029BF805185}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="03B - DIMENSION - DimTamano"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="2">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask"
+          SQLTask:Connection="{A3CC464B-B49D-4948-A7ED-606C07495C0B}"
+          SQLTask:SqlStatementSource="IF EXISTS (SELECT DISTINCT s.CategoriaTamano FROM dbo.stg_dry_beans_clean s LEFT JOIN dbo.dim_tamano d ON d.categoria_tamano=s.CategoriaTamano WHERE d.id_tamano IS NULL) THROW 51012,'DimTamano no contiene todas las categorías de staging.',1;" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\03C - DIMENSION - DimForma"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Comprueba que las 4 categorías de forma existan en DimForma."
+      DTS:DTSID="{C359D8A4-8999-4427-B59A-2EAA265C0382}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="03C - DIMENSION - DimForma"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask"
+          SQLTask:Connection="{A3CC464B-B49D-4948-A7ED-606C07495C0B}"
+          SQLTask:SqlStatementSource="IF EXISTS (SELECT DISTINCT s.CategoriaForma FROM dbo.stg_dry_beans_clean s LEFT JOIN dbo.dim_forma d ON d.categoria_forma=s.CategoriaForma WHERE d.id_forma IS NULL) THROW 51013,'DimForma no contiene todas las categorías de staging.',1;" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\04 - HECHOS - FactBeanMorphology"
       DTS:CreationName="Microsoft.ExecuteSQLTask"
       DTS:Description="Asigna claves dimensionales y carga la tabla de hechos."
       DTS:DTSID="{26C8E208-06D1-4EAB-B831-29DA579FB895}"
       DTS:ExecutableType="Microsoft.ExecuteSQLTask"
       DTS:LocaleID="-1"
-      DTS:ObjectName="03 - LOAD - Cargar esquema estrella"
+      DTS:ObjectName="04 - HECHOS - FactBeanMorphology"
       DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
       DTS:ThreadHint="1">
       <DTS:Variables />
@@ -80,13 +131,13 @@
       </DTS:ObjectData>
     </DTS:Executable>
     <DTS:Executable
-      DTS:refId="Package\04 - VALIDATE - Integridad y conteos"
+      DTS:refId="Package\05 - VALIDATE - Integridad y conteos"
       DTS:CreationName="Microsoft.ExecuteSQLTask"
       DTS:Description="Valida 13,543 hechos, claves y restricciones."
       DTS:DTSID="{45C9ADE1-9CDA-45E6-AD78-C3C56AADE9F6}"
       DTS:ExecutableType="Microsoft.ExecuteSQLTask"
       DTS:LocaleID="-1"
-      DTS:ObjectName="04 - VALIDATE - Integridad y conteos"
+      DTS:ObjectName="05 - VALIDATE - Integridad y conteos"
       DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
       DTS:ThreadHint="0">
       <DTS:Variables />
@@ -99,8 +150,13 @@
   </DTS:Executables>
   <DTS:PrecedenceConstraints>
     <DTS:PrecedenceConstraint DTS:refId="Package.PrecedenceConstraints[Extract_to_Transform]" DTS:CreationName="" DTS:DTSID="{01D7C472-AB4B-4B13-B666-B1E8D4A745A2}" DTS:From="Package\01 - EXTRACT - CSV a staging" DTS:LogicalAnd="True" DTS:ObjectName="Extract_to_Transform" DTS:To="Package\02 - TRANSFORM - Limpiar y categorizar" />
-    <DTS:PrecedenceConstraint DTS:refId="Package.PrecedenceConstraints[Transform_to_Load]" DTS:CreationName="" DTS:DTSID="{8AB50F26-68E7-4DA7-82FD-B3234BCF6189}" DTS:From="Package\02 - TRANSFORM - Limpiar y categorizar" DTS:LogicalAnd="True" DTS:ObjectName="Transform_to_Load" DTS:To="Package\03 - LOAD - Cargar esquema estrella" />
-    <DTS:PrecedenceConstraint DTS:refId="Package.PrecedenceConstraints[Load_to_Validate]" DTS:CreationName="" DTS:DTSID="{24C0EFBD-9064-4FC8-A389-E24C76D9C11F}" DTS:From="Package\03 - LOAD - Cargar esquema estrella" DTS:LogicalAnd="True" DTS:ObjectName="Load_to_Validate" DTS:To="Package\04 - VALIDATE - Integridad y conteos" />
+    <DTS:PrecedenceConstraint DTS:refId="Package.PrecedenceConstraints[Transform_to_DimVariedad]" DTS:CreationName="" DTS:DTSID="{8AB50F26-68E7-4DA7-82FD-B3234BCF6189}" DTS:From="Package\02 - TRANSFORM - Limpiar y categorizar" DTS:LogicalAnd="True" DTS:ObjectName="Transform_to_DimVariedad" DTS:To="Package\03A - DIMENSION - DimVariedad" />
+    <DTS:PrecedenceConstraint DTS:refId="Package.PrecedenceConstraints[Transform_to_DimTamano]" DTS:CreationName="" DTS:DTSID="{35EE0D72-0D10-4CE7-8D0C-A8E0D2BC4DF1}" DTS:From="Package\02 - TRANSFORM - Limpiar y categorizar" DTS:LogicalAnd="True" DTS:ObjectName="Transform_to_DimTamano" DTS:To="Package\03B - DIMENSION - DimTamano" />
+    <DTS:PrecedenceConstraint DTS:refId="Package.PrecedenceConstraints[Transform_to_DimForma]" DTS:CreationName="" DTS:DTSID="{2F026E95-E73B-4CE6-A468-E93121CB5803}" DTS:From="Package\02 - TRANSFORM - Limpiar y categorizar" DTS:LogicalAnd="True" DTS:ObjectName="Transform_to_DimForma" DTS:To="Package\03C - DIMENSION - DimForma" />
+    <DTS:PrecedenceConstraint DTS:refId="Package.PrecedenceConstraints[DimVariedad_to_Fact]" DTS:CreationName="" DTS:DTSID="{2D3BCB5E-E2F0-4770-9EB6-E6264FE5DB58}" DTS:From="Package\03A - DIMENSION - DimVariedad" DTS:LogicalAnd="True" DTS:ObjectName="DimVariedad_to_Fact" DTS:To="Package\04 - HECHOS - FactBeanMorphology" />
+    <DTS:PrecedenceConstraint DTS:refId="Package.PrecedenceConstraints[DimTamano_to_Fact]" DTS:CreationName="" DTS:DTSID="{A45248C4-F5E8-4FA8-BDA0-D225315B80DF}" DTS:From="Package\03B - DIMENSION - DimTamano" DTS:LogicalAnd="True" DTS:ObjectName="DimTamano_to_Fact" DTS:To="Package\04 - HECHOS - FactBeanMorphology" />
+    <DTS:PrecedenceConstraint DTS:refId="Package.PrecedenceConstraints[DimForma_to_Fact]" DTS:CreationName="" DTS:DTSID="{03685EED-C687-444D-86BB-79DD45877BEF}" DTS:From="Package\03C - DIMENSION - DimForma" DTS:LogicalAnd="True" DTS:ObjectName="DimForma_to_Fact" DTS:To="Package\04 - HECHOS - FactBeanMorphology" />
+    <DTS:PrecedenceConstraint DTS:refId="Package.PrecedenceConstraints[Fact_to_Validate]" DTS:CreationName="" DTS:DTSID="{24C0EFBD-9064-4FC8-A389-E24C76D9C11F}" DTS:From="Package\04 - HECHOS - FactBeanMorphology" DTS:LogicalAnd="True" DTS:ObjectName="Fact_to_Validate" DTS:To="Package\05 - VALIDATE - Integridad y conteos" />
   </DTS:PrecedenceConstraints>
   <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
 <!--Esta sección CDATA contiene la información de diseño del paquete. Esta sección incluye información como, por ejemplo, las coordenadas (x,y), el ancho y el alto.-->
@@ -113,23 +169,35 @@
     design-time-name="Package">
     <LayoutInfo>
       <GraphLayout
-        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        Capacity="7" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
         <NodeLayout
           Size="260,42"
           Id="Package\01 - EXTRACT - CSV a staging"
-          TopLeft="80,40" />
+          TopLeft="300,30" />
         <NodeLayout
           Size="185,42"
           Id="Package\02 - TRANSFORM - Limpiar y categorizar"
-          TopLeft="80,130" />
+          TopLeft="335,110" />
         <NodeLayout
-          Size="185,42"
-          Id="Package\03 - LOAD - Cargar esquema estrella"
-          TopLeft="80,220" />
+          Size="220,48"
+          Id="Package\03A - DIMENSION - DimVariedad"
+          TopLeft="60,220" />
         <NodeLayout
-          Size="185,42"
-          Id="Package\04 - VALIDATE - Integridad y conteos"
-          TopLeft="80,310" />
+          Size="220,48"
+          Id="Package\03B - DIMENSION - DimTamano"
+          TopLeft="320,220" />
+        <NodeLayout
+          Size="220,48"
+          Id="Package\03C - DIMENSION - DimForma"
+          TopLeft="580,220" />
+        <NodeLayout
+          Size="250,52"
+          Id="Package\04 - HECHOS - FactBeanMorphology"
+          TopLeft="305,340" />
+        <NodeLayout
+          Size="230,48"
+          Id="Package\05 - VALIDATE - Integridad y conteos"
+          TopLeft="315,450" />
       </GraphLayout>
     </LayoutInfo>
   </Package>

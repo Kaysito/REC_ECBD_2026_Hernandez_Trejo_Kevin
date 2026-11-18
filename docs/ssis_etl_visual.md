@@ -8,10 +8,13 @@ El paquete `Package.dtsx` implementa visualmente la carga del Data Mart estrella
 
 1. **01 - EXTRACT - CSV a staging:** crea las tablas temporales y carga `data/processed/dry_beans_cleaned.csv` mediante `BULK INSERT`.
 2. **02 - TRANSFORM - Limpiar y categorizar:** normaliza `Class` y deriva las categorías de tamaño y forma.
-3. **03 - LOAD - Cargar esquema estrella:** relaciona las dimensiones `dim_variedad`, `dim_tamano` y `dim_forma`, y carga `fact_bean_morphology`.
-4. **04 - VALIDATE - Integridad y conteos:** exige 13,543 hechos, comprueba claves y restricciones, y elimina las tablas temporales.
+3. **03A - DIMENSION - DimVariedad:** comprueba que las siete clases de staging tengan una clave en `dim_variedad`.
+4. **03B - DIMENSION - DimTamano:** comprueba las cuatro categorías de tamaño contra `dim_tamano`.
+5. **03C - DIMENSION - DimForma:** comprueba las cuatro categorías de forma contra `dim_forma`.
+6. **04 - HECHOS - FactBeanMorphology:** recibe las tres dimensiones, asigna sus claves y carga los 13,543 hechos.
+7. **05 - VALIDATE - Integridad y conteos:** comprueba hechos, claves y restricciones, y elimina las tablas temporales.
 
-Las flechas verdes representan restricciones de precedencia por éxito. Una etapa solo comienza cuando la anterior finaliza correctamente.
+Las flechas verdes representan restricciones de precedencia por éxito. Después de la transformación, las tres comprobaciones dimensionales se ejecutan en paralelo y convergen en la tabla de hechos. Esta distribución muestra visualmente la forma de estrella del Data Mart.
 
 ## Conexion
 
@@ -26,7 +29,7 @@ Las flechas verdes representan restricciones de precedencia por éxito. Una etap
 1. Abrir `ssis/DryBean_ETL_SSIS/DryBean_ETL_SSIS.slnx`.
 2. Abrir `Package.dtsx` y seleccionar **Flujo de control**.
 3. Presionar **Iniciar** o `F5`.
-4. Confirmar que las cuatro tareas queden verdes y aparezca el mensaje: “La ejecución del paquete se completó correctamente”.
+4. Confirmar que las siete tareas queden verdes y aparezca el mensaje: “La ejecución del paquete se completó correctamente”.
 
 ## Validacion realizada
 
