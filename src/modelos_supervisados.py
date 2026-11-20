@@ -18,7 +18,8 @@ from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import (
     mean_squared_error, mean_absolute_error, r2_score,
-    accuracy_score, f1_score, classification_report, confusion_matrix
+    accuracy_score, f1_score, precision_score, recall_score,
+    classification_report, confusion_matrix
 )
 
 PROCESSED_DATA_PATH = os.path.join("data", "processed", "dry_beans_cleaned.csv")
@@ -149,11 +150,15 @@ def ejecutar_modelado_supervisado():
         y_pred = modelo.predict(X_test_c)
         
         acc = accuracy_score(y_test_c, y_pred)
+        macro_precision = precision_score(y_test_c, y_pred, average="macro", zero_division=0)
+        macro_recall = recall_score(y_test_c, y_pred, average="macro", zero_division=0)
         macro_f1 = f1_score(y_test_c, y_pred, average="macro")
         weighted_f1 = f1_score(y_test_c, y_pred, average="weighted")
         
         resultados_clf[nombre] = {
             "Accuracy": float(acc),
+            "Macro_Precision": float(macro_precision),
+            "Macro_Recall": float(macro_recall),
             "Macro_F1": float(macro_f1),
             "Weighted_F1": float(weighted_f1)
         }
@@ -181,6 +186,7 @@ def ejecutar_modelado_supervisado():
     reporte_supervisado = {
         "regresion_area": metricas_reg,
         "clasificacion_multiclase": resultados_clf,
+        "reportes_clasificacion_por_clase": reportes_detallados,
         "clases": clases_ordenadas,
         "matriz_confusion_mejor_modelo": {
             "modelo": mejor_clf[0],

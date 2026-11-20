@@ -64,6 +64,11 @@ def ejecutar_modelado_no_supervisado():
     tabla_cruzada = pd.crosstab(df_salida["Cluster"], df_salida["Class"])
     tabla_cruzada.to_csv(os.path.join(OUTPUTS_DIR, "clusters_vs_clases.csv"))
 
+    variables_perfil = ["Area", "Perimeter", "AspectRatio", "Roundness", "Compactness", "Solidity"]
+    perfiles = df_salida.groupby("Cluster")[variables_perfil].mean().round(4)
+    perfiles.insert(0, "Registros", df_salida.groupby("Cluster").size())
+    perfiles.to_csv(os.path.join(OUTPUTS_DIR, "perfiles_clusters.csv"))
+
     sns.set_theme(style="whitegrid")
     ks = [r["k"] for r in resultados_k]
     fig, axes = plt.subplots(1, 2, figsize=(12, 4.8))
@@ -94,6 +99,13 @@ def ejecutar_modelado_no_supervisado():
         "mejor_k_segun_silhouette": int(mejor_k),
         "silhouette_mejor_k": float(max(r["silhouette"] for r in resultados_k)),
         "comparacion_externa_solo_interpretativa": {"ARI": float(ari), "NMI": float(nmi)},
+        "perfiles_clusters": {
+            str(int(cluster)): {
+                columna: (int(valor) if columna == "Registros" else float(valor))
+                for columna, valor in fila.items()
+            }
+            for cluster, fila in perfiles.iterrows()
+        },
         "nota": "Class no se utilizo para entrenar K-means; solo para interpretar los grupos obtenidos."
     }
     with open(os.path.join(OUTPUTS_DIR, "evaluacion_modelos_no_supervisados.json"), "w", encoding="utf-8") as f:

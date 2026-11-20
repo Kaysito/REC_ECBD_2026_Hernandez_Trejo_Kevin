@@ -85,7 +85,20 @@ El archivo original se conserva sin modificaciones en `data/raw`. Los datos cura
    - Evaluacion K-means de k=2 a k=10 mediante codo y silhouette.
    - Mejor resultado interno: k=3, silhouette=0.4203.
    - Comparacion interpretativa con `Class`: ARI=0.2964 y NMI=0.4837; la clase no participa en el entrenamiento.
-5. **Unidad V (Visualizacion y Cierre - 15%):** Dashboard ejecutivo funcional en Streamlit y dashboard terminado en Power BI. El informe de Power BI usa una sola tabla analítica, dos páginas, 19 visuales, 9 medidas DAX y filtros interactivos; el modelo estrella permanece documentado por separado en SQL Server y SQLite.
+5. **Unidad V (Visualizacion y Cierre - 15%):** Dashboard integrado y verificado en Streamlit con indicadores, análisis descriptivo, regresión, clasificación, clustering, PCA y trazabilidad. Power BI funciona como complemento descriptivo con una sola tabla analítica, dos páginas, 19 visuales, 9 medidas DAX y filtros interactivos; el modelo estrella permanece documentado por separado en SQL Server y SQLite.
+
+## Conclusiones y recomendaciones
+
+### Conclusiones
+
+1. Las mediciones morfológicas permiten clasificar las siete variedades con resultados consistentes. La regresión logística alcanzó 92.10% de exactitud y 93.24% de Macro F1 sobre el 30% reservado para prueba.
+2. Random Forest estimó `Area` con `R² = 0.9996` y un error absoluto medio de 213.23 píxeles, sin utilizar variables que revelan el área mediante una fórmula directa.
+3. K-Means encontró tres perfiles morfológicos con Silhouette de 0.4203. Los clusters separan principalmente granos pequeños y compactos, granos intermedios más alargados y un grupo reducido de granos muy grandes. Cuatro componentes PCA conservaron 95.00% de la varianza.
+
+### Recomendaciones
+
+1. Utilizar el clasificador como apoyo para una primera identificación automática y mantener revisión humana en variedades con mayor confusión, especialmente `SIRA` y `DERMASON`.
+2. Incorporar nuevas muestras tomadas con condiciones de iluminación y captura diferentes antes de usar el modelo fuera del entorno del dataset. Esta validación permitirá comprobar su capacidad de generalización.
 
 ---
 

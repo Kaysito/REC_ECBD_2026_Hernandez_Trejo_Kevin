@@ -109,12 +109,22 @@ with tab1:
         st.dataframe(pd.DataFrame([{'Nombre original':k,'Significado en español':v} for k,v in ETIQUETAS.items()]), hide_index=True, width='stretch')
 
 with tab2:
-    st.subheader("Comparación de modelos de clasificación (70/30)")
+    st.subheader("Regresión de área (70/30)")
+    tabla_reg = pd.DataFrame(supervisado["regresion_area"]).T.reset_index(names="Modelo")
+    r1, r2 = st.columns([1.15, 1])
+    r1.plotly_chart(px.bar(tabla_reg, x="Modelo", y="R2", color="Modelo",
+                           range_y=[0.95, 1], title="R² en el 30 % reservado para prueba"), width="stretch")
+    r2.dataframe(tabla_reg.style.format({"R2":"{:.4f}", "MAE":"{:,.2f}", "RMSE":"{:,.2f}"}),
+                 hide_index=True, width="stretch")
+    mejor_reg = tabla_reg.loc[tabla_reg["R2"].idxmax()]
+    st.info(f"Random Forest obtiene R²={mejor_reg['R2']:.4f} y MAE={mejor_reg['MAE']:,.2f} píxeles. La regresión estima Area sin usar EquivDiameter, ConvexArea ni factores derivados directamente del área.")
+
+    st.subheader("Clasificación de variedades (70/30)")
     tabla_clf = pd.DataFrame(supervisado["clasificacion_multiclase"]).T.reset_index(names="Modelo")
-    fig = px.bar(tabla_clf, x="Modelo", y=["Accuracy", "Macro_F1", "Weighted_F1"],
+    fig = px.bar(tabla_clf, x="Modelo", y=["Accuracy", "Macro_Precision", "Macro_Recall", "Macro_F1"],
                  barmode="group", range_y=[0, 1], title="Métricas sobre el 30 % de prueba")
     st.plotly_chart(fig, width="stretch")
-    st.dataframe(tabla_clf.style.format({"Accuracy":"{:.2%}", "Macro_F1":"{:.2%}", "Weighted_F1":"{:.2%}"}), width="stretch")
+    st.dataframe(tabla_clf.style.format({c:"{:.2%}" for c in tabla_clf.columns if c != "Modelo"}), width="stretch")
     st.info("El 70 % de los registros se utilizó para entrenamiento y el 30 % quedó reservado para evaluación.")
     st.caption('Exactitud: proporción total de aciertos. F1 macro: promedio del F1 de las siete variedades, dando el mismo peso a cada una. F1 ponderado: considera cuántos registros tiene cada variedad.')
 
@@ -132,6 +142,11 @@ with tab3:
     a, b = st.columns(2)
     a.plotly_chart(px.line(eval_k, x="k", y="inercia", markers=True, title="Método del codo"), width="stretch")
     b.plotly_chart(px.line(eval_k, x="k", y="silhouette", markers=True, title="Coeficiente de silueta"), width="stretch")
+    perfiles = pd.DataFrame(no_supervisado["perfiles_clusters"]).T
+    perfiles.index.name = "Cluster"
+    st.subheader("Características promedio de los clusters")
+    st.dataframe(perfiles.style.format({c:"{:,.4f}" for c in perfiles.columns if c != "Registros"}), width="stretch")
+    st.info("Los clusters representan perfiles morfológicos, no variedades oficiales. Se interpretan comparando tamaño, elongación, redondez, compacidad y solidez promedio.")
     st.caption("La variable Class no participó en K-means; solo se usa después para interpretar los grupos.")
 
 with tab4:

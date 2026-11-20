@@ -43,7 +43,7 @@
         },
         {
             "k": 6,
-            "inercia": 46750.879924203924,
+            "inercia": 46750.87992420393,
             "silhouette": 0.3792743791353395
         },
         {
@@ -53,7 +53,7 @@
         },
         {
             "k": 8,
-            "inercia": 37822.45091930069,
+            "inercia": 37822.45091930068,
             "silhouette": 0.3206646216969554
         },
         {
@@ -72,6 +72,35 @@
     "comparacion_externa_solo_interpretativa": {
         "ARI": 0.2963972817306092,
         "NMI": 0.4836512500335167
+    },
+    "perfiles_clusters": {
+        "0": {
+            "Registros": 524,
+            "Area": 173264.8397,
+            "Perimeter": 1584.6404,
+            "AspectRatio": 1.5853,
+            "Roundness": 0.8643,
+            "Compactness": 0.7927,
+            "Solidity": 0.9869
+        },
+        "1": {
+            "Registros": 7571,
+            "Area": 37445.3286,
+            "Perimeter": 714.7993,
+            "AspectRatio": 1.4318,
+            "Roundness": 0.9138,
+            "Compactness": 0.8378,
+            "Solidity": 0.9889
+        },
+        "2": {
+            "Registros": 5448,
+            "Area": 63169.2254,
+            "Perimeter": 979.6399,
+            "AspectRatio": 1.7882,
+            "Roundness": 0.8188,
+            "Compactness": 0.749,
+            "Solidity": 0.9848
+        }
     },
     "nota": "Class no se utilizo para entrenar K-means; solo para interpretar los grupos obtenidos."
 }

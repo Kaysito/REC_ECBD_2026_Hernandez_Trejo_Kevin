@@ -10,6 +10,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+import json
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import confusion_matrix
 
@@ -78,7 +79,10 @@ cm = confusion_matrix(y_test_c, y_pred_clf, labels=clases)
 
 plt.figure(figsize=(8, 6.5))
 sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", xticklabels=clases, yticklabels=clases, cbar=True)
-plt.title("Matriz de Confusion Multiclase - Random Forest (Macro F1: 93.18%)", fontsize=12, fontweight="bold")
+with open(os.path.join(OUTPUTS_DIR, "evaluacion_modelos_supervisados.json"), encoding="utf-8") as f:
+    metricas_json = json.load(f)
+rf_f1 = metricas_json["clasificacion_multiclase"]["Random_Forest_Classifier"]["Macro_F1"]
+plt.title(f"Matriz de Confusion Multiclase - Random Forest (Macro F1: {rf_f1:.2%})", fontsize=12, fontweight="bold")
 plt.xlabel("Clase Predicha", fontsize=11)
 plt.ylabel("Clase Real", fontsize=11)
 plt.tight_layout()
@@ -87,11 +91,13 @@ plt.close()
 print("3. Matriz de confusion guardada.")
 
 # 4. Grafica: Comparativa de Clasificadores
-metricas = pd.DataFrame({
-    "Modelo": ["Reg. Logística", "k-NN (k=5)", "Random Forest"],
-    "Accuracy": [0.9192, 0.9155, 0.9203],
-    "Macro F1": [0.9302, 0.9270, 0.9318]
+metricas = pd.DataFrame(metricas_json["clasificacion_multiclase"]).T.reset_index(names="Modelo")
+metricas["Modelo"] = metricas["Modelo"].replace({
+    "Regresion_Logistica": "Reg. Logística",
+    "kNN_Classifier": "k-NN (k=5)",
+    "Random_Forest_Classifier": "Random Forest",
 })
+metricas = metricas.rename(columns={"Macro_F1": "Macro F1"})[["Modelo", "Accuracy", "Macro F1"]]
 metricas_melt = metricas.melt(id_vars="Modelo", var_name="Metrica", value_name="Score")
 
 plt.figure(figsize=(8, 4.5))
