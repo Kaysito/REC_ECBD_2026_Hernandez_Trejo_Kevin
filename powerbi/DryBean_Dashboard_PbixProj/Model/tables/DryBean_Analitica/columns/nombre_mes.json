@@ -1,0 +1,12 @@
+{
+  "name": "nombre_mes",
+  "dataType": "string",
+  "sourceColumn": "nombre_mes",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "User"
+    }
+  ]
+}

@@ -7,6 +7,7 @@ consultas locales y conexión mediante ODBC sin alterar el modelo dimensional.
 from __future__ import annotations
 
 import sqlite3
+from datetime import date
 from pathlib import Path
 
 import pandas as pd
@@ -77,11 +78,23 @@ def crear_datamart() -> Path:
                 rango_aspect_ratio_max REAL NOT NULL,
                 descripcion TEXT
             );
+            CREATE TABLE dim_tiempo (
+                id_tiempo INTEGER PRIMARY KEY,
+                fecha TEXT NOT NULL UNIQUE,
+                anio INTEGER NOT NULL,
+                trimestre INTEGER NOT NULL,
+                mes INTEGER NOT NULL,
+                nombre_mes TEXT NOT NULL,
+                dia INTEGER NOT NULL,
+                dia_semana INTEGER NOT NULL,
+                nombre_dia TEXT NOT NULL
+            );
             CREATE TABLE fact_bean_morphology (
                 id_grano INTEGER PRIMARY KEY,
                 id_variedad INTEGER NOT NULL REFERENCES dim_variedad(id_variedad),
                 id_tamano INTEGER NOT NULL REFERENCES dim_tamano(id_tamano),
                 id_forma INTEGER NOT NULL REFERENCES dim_forma(id_forma),
+                id_tiempo INTEGER NOT NULL REFERENCES dim_tiempo(id_tiempo),
                 area INTEGER NOT NULL,
                 perimeter REAL NOT NULL,
                 major_axis_length REAL NOT NULL,
@@ -103,12 +116,23 @@ def crear_datamart() -> Path:
             CREATE INDEX ix_fact_variedad ON fact_bean_morphology(id_variedad);
             CREATE INDEX ix_fact_tamano ON fact_bean_morphology(id_tamano);
             CREATE INDEX ix_fact_forma ON fact_bean_morphology(id_forma);
+            CREATE INDEX ix_fact_tiempo ON fact_bean_morphology(id_tiempo);
             CREATE INDEX ix_fact_area ON fact_bean_morphology(area);
             """
         )
         con.executemany("INSERT INTO dim_variedad VALUES (?,?,?,?)", VARIEDADES)
         con.executemany("INSERT INTO dim_tamano VALUES (?,?,?,?,?)", TAMANOS)
         con.executemany("INSERT INTO dim_forma VALUES (?,?,?,?,?)", FORMAS)
+        fecha_carga = date.today()
+        id_tiempo = int(fecha_carga.strftime("%Y%m%d"))
+        meses = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"]
+        dias = ["lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"]
+        con.execute(
+            "INSERT INTO dim_tiempo VALUES (?,?,?,?,?,?,?,?,?)",
+            (id_tiempo, fecha_carga.isoformat(), fecha_carga.year, (fecha_carga.month - 1) // 3 + 1,
+             fecha_carga.month, meses[fecha_carga.month - 1], fecha_carga.day,
+             fecha_carga.isoweekday(), dias[fecha_carga.weekday()]),
+        )
 
         variedad = {nombre: clave for clave, nombre, *_ in VARIEDADES}
         id_tamano = pd.cut(
@@ -125,6 +149,7 @@ def crear_datamart() -> Path:
             "id_variedad": df["Class"].map(variedad),
             "id_tamano": id_tamano,
             "id_forma": id_forma,
+            "id_tiempo": id_tiempo,
             "area": df["Area"],
             "perimeter": df["Perimeter"],
             "major_axis_length": df["MajorAxisLength"],
@@ -148,11 +173,14 @@ def crear_datamart() -> Path:
             """
             CREATE VIEW vw_bean_bi AS
             SELECT f.*, v.nombre_variedad AS variedad,
-                   t.categoria_tamano, fo.categoria_forma
+                   t.categoria_tamano, fo.categoria_forma,
+                   ti.fecha, ti.anio, ti.trimestre, ti.mes, ti.nombre_mes,
+                   ti.dia, ti.dia_semana, ti.nombre_dia
             FROM fact_bean_morphology f
             JOIN dim_variedad v USING(id_variedad)
             JOIN dim_tamano t USING(id_tamano)
-            JOIN dim_forma fo USING(id_forma);
+            JOIN dim_forma fo USING(id_forma)
+            JOIN dim_tiempo ti USING(id_tiempo);
 
             CREATE VIEW vw_kpi_variedad AS
             SELECT v.nombre_variedad AS variedad, COUNT(*) AS total_granos,
@@ -177,7 +205,7 @@ def crear_datamart() -> Path:
         )
 
     print(f"Data Mart SQLite creado: {DB}")
-    print("Hechos: 13,543 | Dimensiones: 7 variedades, 4 tamaños, 4 formas | FK: 0 errores")
+    print("Hechos: 13,543 | Dimensiones: 7 variedades, 4 tamaños, 4 formas y tiempo | FK: 0 errores")
     return DB
 
 

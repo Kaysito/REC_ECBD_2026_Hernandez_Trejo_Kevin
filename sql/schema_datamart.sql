@@ -15,6 +15,7 @@ GO
 
 -- 2. ELIMINACION PREVIA DE TABLAS (ORDEN POR CLAVES FORANEAS)
 IF OBJECT_ID('dbo.fact_bean_morphology', 'U') IS NOT NULL DROP TABLE dbo.fact_bean_morphology;
+IF OBJECT_ID('dbo.dim_tiempo', 'U') IS NOT NULL DROP TABLE dbo.dim_tiempo;
 IF OBJECT_ID('dbo.dim_forma', 'U') IS NOT NULL DROP TABLE dbo.dim_forma;
 IF OBJECT_ID('dbo.dim_tamano', 'U') IS NOT NULL DROP TABLE dbo.dim_tamano;
 IF OBJECT_ID('dbo.dim_variedad', 'U') IS NOT NULL DROP TABLE dbo.dim_variedad;
@@ -52,7 +53,22 @@ CREATE TABLE dbo.dim_forma (
 );
 GO
 
--- 6. TABLA DE HECHOS: fact_bean_morphology
+-- 6. TABLA DIMENSIONAL: dim_tiempo
+-- Fecha técnica de ejecución de cada carga ETL. La clave usa el formato YYYYMMDD.
+CREATE TABLE dbo.dim_tiempo (
+    id_tiempo INT PRIMARY KEY,
+    fecha DATE NOT NULL UNIQUE,
+    anio SMALLINT NOT NULL,
+    trimestre TINYINT NOT NULL,
+    mes TINYINT NOT NULL,
+    nombre_mes VARCHAR(15) NOT NULL,
+    dia TINYINT NOT NULL,
+    dia_semana TINYINT NOT NULL,
+    nombre_dia VARCHAR(15) NOT NULL
+);
+GO
+
+-- 7. TABLA DE HECHOS: fact_bean_morphology
 -- Cada registro representa la medicion individual de un grano fotogrametrico limpio
 CREATE TABLE dbo.fact_bean_morphology (
     id_grano INT IDENTITY(1,1) PRIMARY KEY,
@@ -61,6 +77,7 @@ CREATE TABLE dbo.fact_bean_morphology (
     id_variedad INT NOT NULL,
     id_tamano INT NOT NULL,
     id_forma INT NOT NULL,
+    id_tiempo INT NOT NULL,
     
     -- Medidas de tamano (continuas y enteras originales)
     area INT NOT NULL,
@@ -90,7 +107,8 @@ CREATE TABLE dbo.fact_bean_morphology (
     -- Restricciones de integridad referencial
     CONSTRAINT FK_fact_variedad FOREIGN KEY (id_variedad) REFERENCES dbo.dim_variedad(id_variedad),
     CONSTRAINT FK_fact_tamano FOREIGN KEY (id_tamano) REFERENCES dbo.dim_tamano(id_tamano),
-    CONSTRAINT FK_fact_forma FOREIGN KEY (id_forma) REFERENCES dbo.dim_forma(id_forma)
+    CONSTRAINT FK_fact_forma FOREIGN KEY (id_forma) REFERENCES dbo.dim_forma(id_forma),
+    CONSTRAINT FK_fact_tiempo FOREIGN KEY (id_tiempo) REFERENCES dbo.dim_tiempo(id_tiempo)
 );
 GO
 
@@ -98,6 +116,7 @@ GO
 CREATE NONCLUSTERED INDEX IX_fact_variedad ON dbo.fact_bean_morphology(id_variedad);
 CREATE NONCLUSTERED INDEX IX_fact_tamano ON dbo.fact_bean_morphology(id_tamano);
 CREATE NONCLUSTERED INDEX IX_fact_forma ON dbo.fact_bean_morphology(id_forma);
+CREATE NONCLUSTERED INDEX IX_fact_tiempo ON dbo.fact_bean_morphology(id_tiempo);
 CREATE NONCLUSTERED INDEX IX_fact_area ON dbo.fact_bean_morphology(area);
 GO
 
@@ -127,6 +146,16 @@ VALUES
 ('Semi-Ovalada',   1.30, 1.65, 'Relacion de aspecto desde 1.30 y menor que 1.65'),
 ('Elongada',       1.65, 2.05, 'Relacion de aspecto desde 1.65 y menor que 2.05'),
 ('Muy Elongada',   2.05, 3.50, 'Relacion de aspecto desde 2.05 y menor que 3.50');
+GO
+
+DECLARE @fecha DATE = CAST(GETDATE() AS DATE);
+INSERT INTO dbo.dim_tiempo
+    (id_tiempo, fecha, anio, trimestre, mes, nombre_mes, dia, dia_semana, nombre_dia)
+VALUES
+    (CONVERT(INT, CONVERT(CHAR(8), @fecha, 112)), @fecha, YEAR(@fecha), DATEPART(QUARTER, @fecha),
+     MONTH(@fecha), CHOOSE(MONTH(@fecha),'Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'),
+     DAY(@fecha), DATEDIFF(DAY,'19000101',@fecha)%7+1,
+     CHOOSE(DATEDIFF(DAY,'19000101',@fecha)%7+1,'Lunes','Martes','Miercoles','Jueves','Viernes','Sabado','Domingo'));
 GO
 
 -- 9. VISTAS ANALITICAS PARA CONECTIVIDAD CON POWER BI

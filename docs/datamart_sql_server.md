@@ -8,6 +8,7 @@ El proyecto utiliza un esquema estrella en la base `DryBean_DataMart`:
 - `dim_variedad`: 7 variedades botánicas.
 - `dim_tamano`: 4 categorías de tamaño.
 - `dim_forma`: 4 categorías morfológicas.
+- `dim_tiempo`: calendario técnico de las ejecuciones ETL; cada carga agrega o reutiliza su fecha.
 
 Cada hecho contiene las 16 mediciones numéricas y tres claves foráneas hacia las dimensiones. El nivel de detalle o granularidad es **un registro por grano de frijol**.
 
@@ -42,6 +43,7 @@ Validación ejecutada el 16 de noviembre de 2026:
 | `dim_variedad` | 7 |
 | `dim_tamano` | 4 |
 | `dim_forma` | 4 |
+| `dim_tiempo` | 1 o más fechas de carga |
 | `fact_bean_morphology` | 13,543 |
 
 - Identificadores de grano únicos: 13,543.

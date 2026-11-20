@@ -16,7 +16,7 @@ TABLES = {
     "DryBean_Analitica": {
         "columns": [
             ("id_grano", "int64"), ("id_variedad", "int64"), ("id_tamano", "int64"),
-            ("id_forma", "int64"), ("area", "int64"), ("perimeter", "double"),
+            ("id_forma", "int64"), ("id_tiempo", "int64"), ("area", "int64"), ("perimeter", "double"),
             ("major_axis_length", "double"), ("minor_axis_length", "double"),
             ("convex_area", "int64"), ("equiv_diameter", "double"),
             ("aspect_ratio", "double"), ("eccentricity", "double"),
@@ -25,7 +25,9 @@ TABLES = {
             ("shape_factor_2", "double"), ("shape_factor_3", "double"),
             ("shape_factor_4", "double"), ("fecha_carga", "string"),
             ("variedad", "string"), ("categoria_tamano", "string"),
-            ("categoria_forma", "string"),
+            ("categoria_forma", "string"), ("fecha", "string"), ("anio", "int64"),
+            ("trimestre", "int64"), ("mes", "int64"), ("nombre_mes", "string"),
+            ("dia", "int64"), ("dia_semana", "int64"), ("nombre_dia", "string"),
         ],
         "measures": [
             ("Total Granos", "COUNTROWS ( DryBean_Analitica )", "#,0"),
@@ -91,16 +93,19 @@ def write_model() -> None:
             (mdir / f"{name}.xml").write_text(f'<Measure Name="{name}">\n  <FormatString>{fmt}</FormatString>\n</Measure>', encoding="utf-8")
 
         typed = ",\n            ".join(f'{{"{c}", {M_TYPES[d]}}}' for c, d in spec["columns"])
-        sql_query = ("SELECT f.id_grano, f.id_variedad, f.id_tamano, f.id_forma, f.area, f.perimeter, "
+        sql_query = ("SELECT f.id_grano, f.id_variedad, f.id_tamano, f.id_forma, f.id_tiempo, f.area, f.perimeter, "
                      "f.major_axis_length, f.minor_axis_length, f.convex_area, f.equiv_diameter, "
                      "f.aspect_ratio, f.eccentricity, f.extent, f.solidity, f.roundness, f.compactness, "
                      "f.shape_factor_1, f.shape_factor_2, f.shape_factor_3, f.shape_factor_4, "
                      "CONVERT(varchar(19), f.fecha_carga, 120) AS fecha_carga, "
-                     "v.nombre_variedad AS variedad, t.categoria_tamano, fo.categoria_forma "
+                     "v.nombre_variedad AS variedad, t.categoria_tamano, fo.categoria_forma, "
+                     "CONVERT(varchar(10), ti.fecha, 23) AS fecha, ti.anio, ti.trimestre, ti.mes, "
+                     "ti.nombre_mes, ti.dia, ti.dia_semana, ti.nombre_dia "
                      "FROM dbo.fact_bean_morphology f "
                      "INNER JOIN dbo.dim_variedad v ON f.id_variedad=v.id_variedad "
                      "INNER JOIN dbo.dim_tamano t ON f.id_tamano=t.id_tamano "
-                     "INNER JOIN dbo.dim_forma fo ON f.id_forma=fo.id_forma")
+                     "INNER JOIN dbo.dim_forma fo ON f.id_forma=fo.id_forma "
+                     "INNER JOIN dbo.dim_tiempo ti ON f.id_tiempo=ti.id_tiempo")
         m = (f'let\n    Source = Sql.Database("(localdb)\\MSSQLLocalDB", "DryBean_DataMart", '
              f'[Query="{sql_query}"]),\n'
              f'    Typed = Table.TransformColumnTypes(Source, {{\n            {typed}\n        }}, "en-US")\n'

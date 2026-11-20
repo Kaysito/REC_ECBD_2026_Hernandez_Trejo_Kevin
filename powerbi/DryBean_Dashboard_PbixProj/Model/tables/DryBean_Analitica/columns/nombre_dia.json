@@ -1,0 +1,12 @@
+{
+  "name": "nombre_dia",
+  "dataType": "string",
+  "sourceColumn": "nombre_dia",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "User"
+    }
+  ]
+}

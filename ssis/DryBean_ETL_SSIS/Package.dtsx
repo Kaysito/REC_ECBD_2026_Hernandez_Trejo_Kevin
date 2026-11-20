@@ -42,7 +42,7 @@
       <DTS:ObjectData>
         <SQLTask:SqlTaskData xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask"
           SQLTask:Connection="{A3CC464B-B49D-4948-A7ED-606C07495C0B}"
-          SQLTask:SqlStatementSource="IF OBJECT_ID('dbo.dim_variedad','U') IS NULL CREATE TABLE dbo.dim_variedad(id_variedad INT IDENTITY(1,1) PRIMARY KEY,nombre_variedad VARCHAR(50) NOT NULL UNIQUE,codigo_variedad CHAR(3) NOT NULL,descripcion_agronomica VARCHAR(255) NULL);&#xA;IF OBJECT_ID('dbo.dim_tamano','U') IS NULL CREATE TABLE dbo.dim_tamano(id_tamano INT IDENTITY(1,1) PRIMARY KEY,categoria_tamano VARCHAR(50) NOT NULL,rango_area_min FLOAT NOT NULL,rango_area_max FLOAT NOT NULL,descripcion VARCHAR(150) NULL);&#xA;IF OBJECT_ID('dbo.dim_forma','U') IS NULL CREATE TABLE dbo.dim_forma(id_forma INT IDENTITY(1,1) PRIMARY KEY,categoria_forma VARCHAR(50) NOT NULL,rango_aspect_ratio_min FLOAT NOT NULL,rango_aspect_ratio_max FLOAT NOT NULL,descripcion VARCHAR(150) NULL);&#xA;IF OBJECT_ID('dbo.fact_bean_morphology','U') IS NULL CREATE TABLE dbo.fact_bean_morphology(id_grano INT IDENTITY(1,1) PRIMARY KEY,id_variedad INT NOT NULL,id_tamano INT NOT NULL,id_forma INT NOT NULL,area INT NOT NULL,perimeter FLOAT NOT NULL,major_axis_length FLOAT NOT NULL,minor_axis_length FLOAT NOT NULL,convex_area INT NOT NULL,equiv_diameter FLOAT NOT NULL,aspect_ratio FLOAT NOT NULL,eccentricity FLOAT NOT NULL,extent FLOAT NOT NULL,solidity FLOAT NOT NULL,roundness FLOAT NOT NULL,compactness FLOAT NOT NULL,shape_factor_1 FLOAT NOT NULL,shape_factor_2 FLOAT NOT NULL,shape_factor_3 FLOAT NOT NULL,shape_factor_4 FLOAT NOT NULL,fecha_carga DATETIME DEFAULT GETDATE(),CONSTRAINT FK_fact_variedad FOREIGN KEY(id_variedad) REFERENCES dbo.dim_variedad(id_variedad),CONSTRAINT FK_fact_tamano FOREIGN KEY(id_tamano) REFERENCES dbo.dim_tamano(id_tamano),CONSTRAINT FK_fact_forma FOREIGN KEY(id_forma) REFERENCES dbo.dim_forma(id_forma));&#xA;TRUNCATE TABLE dbo.fact_bean_morphology;&#xA;IF NOT EXISTS(SELECT 1 FROM sys.indexes WHERE name='IX_fact_variedad' AND object_id=OBJECT_ID('dbo.fact_bean_morphology')) CREATE INDEX IX_fact_variedad ON dbo.fact_bean_morphology(id_variedad);&#xA;IF NOT EXISTS(SELECT 1 FROM sys.indexes WHERE name='IX_fact_tamano' AND object_id=OBJECT_ID('dbo.fact_bean_morphology')) CREATE INDEX IX_fact_tamano ON dbo.fact_bean_morphology(id_tamano);&#xA;IF NOT EXISTS(SELECT 1 FROM sys.indexes WHERE name='IX_fact_forma' AND object_id=OBJECT_ID('dbo.fact_bean_morphology')) CREATE INDEX IX_fact_forma ON dbo.fact_bean_morphology(id_forma);" />
+          SQLTask:SqlStatementSource="IF OBJECT_ID('dbo.fact_bean_morphology','U') IS NOT NULL AND COL_LENGTH('dbo.fact_bean_morphology','id_tiempo') IS NULL DROP TABLE dbo.fact_bean_morphology;&#xA;IF OBJECT_ID('dbo.dim_variedad','U') IS NULL CREATE TABLE dbo.dim_variedad(id_variedad INT IDENTITY(1,1) PRIMARY KEY,nombre_variedad VARCHAR(50) NOT NULL UNIQUE,codigo_variedad CHAR(3) NOT NULL,descripcion_agronomica VARCHAR(255) NULL);&#xA;IF OBJECT_ID('dbo.dim_tamano','U') IS NULL CREATE TABLE dbo.dim_tamano(id_tamano INT IDENTITY(1,1) PRIMARY KEY,categoria_tamano VARCHAR(50) NOT NULL,rango_area_min FLOAT NOT NULL,rango_area_max FLOAT NOT NULL,descripcion VARCHAR(150) NULL);&#xA;IF OBJECT_ID('dbo.dim_forma','U') IS NULL CREATE TABLE dbo.dim_forma(id_forma INT IDENTITY(1,1) PRIMARY KEY,categoria_forma VARCHAR(50) NOT NULL,rango_aspect_ratio_min FLOAT NOT NULL,rango_aspect_ratio_max FLOAT NOT NULL,descripcion VARCHAR(150) NULL);&#xA;IF OBJECT_ID('dbo.dim_tiempo','U') IS NULL CREATE TABLE dbo.dim_tiempo(id_tiempo INT PRIMARY KEY,fecha DATE NOT NULL UNIQUE,anio SMALLINT NOT NULL,trimestre TINYINT NOT NULL,mes TINYINT NOT NULL,nombre_mes VARCHAR(15) NOT NULL,dia TINYINT NOT NULL,dia_semana TINYINT NOT NULL,nombre_dia VARCHAR(15) NOT NULL);&#xA;IF OBJECT_ID('dbo.fact_bean_morphology','U') IS NULL CREATE TABLE dbo.fact_bean_morphology(id_grano INT IDENTITY(1,1) PRIMARY KEY,id_variedad INT NOT NULL,id_tamano INT NOT NULL,id_forma INT NOT NULL,id_tiempo INT NOT NULL,area INT NOT NULL,perimeter FLOAT NOT NULL,major_axis_length FLOAT NOT NULL,minor_axis_length FLOAT NOT NULL,convex_area INT NOT NULL,equiv_diameter FLOAT NOT NULL,aspect_ratio FLOAT NOT NULL,eccentricity FLOAT NOT NULL,extent FLOAT NOT NULL,solidity FLOAT NOT NULL,roundness FLOAT NOT NULL,compactness FLOAT NOT NULL,shape_factor_1 FLOAT NOT NULL,shape_factor_2 FLOAT NOT NULL,shape_factor_3 FLOAT NOT NULL,shape_factor_4 FLOAT NOT NULL,fecha_carga DATETIME DEFAULT GETDATE(),CONSTRAINT FK_fact_variedad FOREIGN KEY(id_variedad) REFERENCES dbo.dim_variedad(id_variedad),CONSTRAINT FK_fact_tamano FOREIGN KEY(id_tamano) REFERENCES dbo.dim_tamano(id_tamano),CONSTRAINT FK_fact_forma FOREIGN KEY(id_forma) REFERENCES dbo.dim_forma(id_forma),CONSTRAINT FK_fact_tiempo FOREIGN KEY(id_tiempo) REFERENCES dbo.dim_tiempo(id_tiempo));&#xA;TRUNCATE TABLE dbo.fact_bean_morphology;&#xA;IF NOT EXISTS(SELECT 1 FROM sys.indexes WHERE name='IX_fact_variedad' AND object_id=OBJECT_ID('dbo.fact_bean_morphology')) CREATE INDEX IX_fact_variedad ON dbo.fact_bean_morphology(id_variedad);&#xA;IF NOT EXISTS(SELECT 1 FROM sys.indexes WHERE name='IX_fact_tamano' AND object_id=OBJECT_ID('dbo.fact_bean_morphology')) CREATE INDEX IX_fact_tamano ON dbo.fact_bean_morphology(id_tamano);&#xA;IF NOT EXISTS(SELECT 1 FROM sys.indexes WHERE name='IX_fact_forma' AND object_id=OBJECT_ID('dbo.fact_bean_morphology')) CREATE INDEX IX_fact_forma ON dbo.fact_bean_morphology(id_forma);&#xA;IF NOT EXISTS(SELECT 1 FROM sys.indexes WHERE name='IX_fact_tiempo' AND object_id=OBJECT_ID('dbo.fact_bean_morphology')) CREATE INDEX IX_fact_tiempo ON dbo.fact_bean_morphology(id_tiempo);" />
       </DTS:ObjectData>
     </DTS:Executable>
     <DTS:Executable
@@ -131,6 +131,23 @@
       </DTS:ObjectData>
     </DTS:Executable>
     <DTS:Executable
+      DTS:refId="Package\03D - DIMENSION - DimTiempo"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Registra la fecha de ejecución de la carga ETL."
+      DTS:DTSID="{BEE0824A-8050-4688-960D-A9E0BE80DC05}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="03D - DIMENSION - DimTiempo"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask"
+          SQLTask:Connection="{A3CC464B-B49D-4948-A7ED-606C07495C0B}"
+          SQLTask:SqlStatementSource="DECLARE @fecha DATE=CAST(GETDATE() AS DATE),@id INT=CONVERT(INT,CONVERT(CHAR(8),GETDATE(),112)),@dia_semana TINYINT=DATEDIFF(DAY,'19000101',CAST(GETDATE() AS DATE))%7+1;&#xA;IF NOT EXISTS(SELECT 1 FROM dbo.dim_tiempo WHERE id_tiempo=@id) INSERT INTO dbo.dim_tiempo(id_tiempo,fecha,anio,trimestre,mes,nombre_mes,dia,dia_semana,nombre_dia) VALUES(@id,@fecha,YEAR(@fecha),DATEPART(QUARTER,@fecha),MONTH(@fecha),CHOOSE(MONTH(@fecha),'Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'),DAY(@fecha),@dia_semana,CHOOSE(@dia_semana,'Lunes','Martes','Miercoles','Jueves','Viernes','Sabado','Domingo')) ELSE UPDATE dbo.dim_tiempo SET nombre_mes=CHOOSE(MONTH(@fecha),'Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'),dia_semana=@dia_semana,nombre_dia=CHOOSE(@dia_semana,'Lunes','Martes','Miercoles','Jueves','Viernes','Sabado','Domingo') WHERE id_tiempo=@id;&#xA;IF NOT EXISTS(SELECT 1 FROM dbo.dim_tiempo WHERE id_tiempo=@id) THROW 51014,'DimTiempo no contiene la fecha de carga.',1;" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
       DTS:refId="Package\04 - HECHOS - FactBeanMorphology"
       DTS:CreationName="Microsoft.ExecuteSQLTask"
       DTS:Description="Asigna claves dimensionales y carga la tabla de hechos."
@@ -144,7 +161,7 @@
       <DTS:ObjectData>
         <SQLTask:SqlTaskData xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask"
           SQLTask:Connection="{A3CC464B-B49D-4948-A7ED-606C07495C0B}"
-          SQLTask:SqlStatementSource="TRUNCATE TABLE dbo.fact_bean_morphology;&#xA;INSERT INTO dbo.fact_bean_morphology(id_variedad,id_tamano,id_forma,area,perimeter,major_axis_length,minor_axis_length,convex_area,equiv_diameter,aspect_ratio,eccentricity,extent,solidity,roundness,compactness,shape_factor_1,shape_factor_2,shape_factor_3,shape_factor_4) SELECT v.id_variedad,t.id_tamano,f.id_forma,s.Area,s.Perimeter,s.MajorAxisLength,s.MinorAxisLength,s.ConvexArea,s.EquivDiameter,s.AspectRatio,s.Eccentricity,s.Extent,s.Solidity,s.Roundness,s.Compactness,s.ShapeFactor1,s.ShapeFactor2,s.ShapeFactor3,s.ShapeFactor4 FROM dbo.stg_dry_beans_clean s JOIN dbo.dim_variedad v ON v.nombre_variedad=s.Class JOIN dbo.dim_tamano t ON t.categoria_tamano=s.CategoriaTamano JOIN dbo.dim_forma f ON f.categoria_forma=s.CategoriaForma;" />
+          SQLTask:SqlStatementSource="TRUNCATE TABLE dbo.fact_bean_morphology;&#xA;DECLARE @id_tiempo INT=CONVERT(INT,CONVERT(CHAR(8),GETDATE(),112));&#xA;INSERT INTO dbo.fact_bean_morphology(id_variedad,id_tamano,id_forma,id_tiempo,area,perimeter,major_axis_length,minor_axis_length,convex_area,equiv_diameter,aspect_ratio,eccentricity,extent,solidity,roundness,compactness,shape_factor_1,shape_factor_2,shape_factor_3,shape_factor_4) SELECT v.id_variedad,t.id_tamano,f.id_forma,@id_tiempo,s.Area,s.Perimeter,s.MajorAxisLength,s.MinorAxisLength,s.ConvexArea,s.EquivDiameter,s.AspectRatio,s.Eccentricity,s.Extent,s.Solidity,s.Roundness,s.Compactness,s.ShapeFactor1,s.ShapeFactor2,s.ShapeFactor3,s.ShapeFactor4 FROM dbo.stg_dry_beans_clean s JOIN dbo.dim_variedad v ON v.nombre_variedad=s.Class JOIN dbo.dim_tamano t ON t.categoria_tamano=s.CategoriaTamano JOIN dbo.dim_forma f ON f.categoria_forma=s.CategoriaForma;" />
       </DTS:ObjectData>
     </DTS:Executable>
     <DTS:Executable
@@ -161,7 +178,7 @@
       <DTS:ObjectData>
         <SQLTask:SqlTaskData xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask"
           SQLTask:Connection="{A3CC464B-B49D-4948-A7ED-606C07495C0B}"
-          SQLTask:SqlStatementSource="IF (SELECT COUNT(*) FROM dbo.fact_bean_morphology)&lt;&gt;13543 THROW 51002,'Validacion fallida: se esperaban 13,543 hechos.',1;&#xA;IF EXISTS(SELECT 1 FROM dbo.fact_bean_morphology WHERE id_variedad IS NULL OR id_tamano IS NULL OR id_forma IS NULL) THROW 51003,'Validacion fallida: existen claves dimensionales nulas.',1;&#xA;DBCC CHECKCONSTRAINTS('dbo.fact_bean_morphology') WITH ALL_CONSTRAINTS;&#xA;DROP TABLE dbo.stg_dry_beans_clean;&#xA;DROP TABLE dbo.stg_dry_beans;" />
+          SQLTask:SqlStatementSource="IF (SELECT COUNT(*) FROM dbo.fact_bean_morphology)&lt;&gt;13543 THROW 51002,'Validacion fallida: se esperaban 13,543 hechos.',1;&#xA;IF EXISTS(SELECT 1 FROM dbo.fact_bean_morphology WHERE id_variedad IS NULL OR id_tamano IS NULL OR id_forma IS NULL OR id_tiempo IS NULL) THROW 51003,'Validacion fallida: existen claves dimensionales nulas.',1;&#xA;DBCC CHECKCONSTRAINTS('dbo.fact_bean_morphology') WITH ALL_CONSTRAINTS;&#xA;DROP TABLE dbo.stg_dry_beans_clean;&#xA;DROP TABLE dbo.stg_dry_beans;" />
       </DTS:ObjectData>
     </DTS:Executable>
   </DTS:Executables>
@@ -171,9 +188,11 @@
     <DTS:PrecedenceConstraint DTS:refId="Package.PrecedenceConstraints[Transform_to_DimVariedad]" DTS:CreationName="" DTS:DTSID="{8AB50F26-68E7-4DA7-82FD-B3234BCF6189}" DTS:From="Package\02 - TRANSFORM - Limpiar y categorizar" DTS:LogicalAnd="True" DTS:ObjectName="Transform_to_DimVariedad" DTS:To="Package\03A - DIMENSION - DimVariedad" />
     <DTS:PrecedenceConstraint DTS:refId="Package.PrecedenceConstraints[Transform_to_DimTamano]" DTS:CreationName="" DTS:DTSID="{35EE0D72-0D10-4CE7-8D0C-A8E0D2BC4DF1}" DTS:From="Package\02 - TRANSFORM - Limpiar y categorizar" DTS:LogicalAnd="True" DTS:ObjectName="Transform_to_DimTamano" DTS:To="Package\03B - DIMENSION - DimTamano" />
     <DTS:PrecedenceConstraint DTS:refId="Package.PrecedenceConstraints[Transform_to_DimForma]" DTS:CreationName="" DTS:DTSID="{2F026E95-E73B-4CE6-A468-E93121CB5803}" DTS:From="Package\02 - TRANSFORM - Limpiar y categorizar" DTS:LogicalAnd="True" DTS:ObjectName="Transform_to_DimForma" DTS:To="Package\03C - DIMENSION - DimForma" />
+    <DTS:PrecedenceConstraint DTS:refId="Package.PrecedenceConstraints[Transform_to_DimTiempo]" DTS:CreationName="" DTS:DTSID="{F7C36C11-7378-43FB-A4F7-264D946BC19B}" DTS:From="Package\02 - TRANSFORM - Limpiar y categorizar" DTS:LogicalAnd="True" DTS:ObjectName="Transform_to_DimTiempo" DTS:To="Package\03D - DIMENSION - DimTiempo" />
     <DTS:PrecedenceConstraint DTS:refId="Package.PrecedenceConstraints[DimVariedad_to_Fact]" DTS:CreationName="" DTS:DTSID="{2D3BCB5E-E2F0-4770-9EB6-E6264FE5DB58}" DTS:From="Package\03A - DIMENSION - DimVariedad" DTS:LogicalAnd="True" DTS:ObjectName="DimVariedad_to_Fact" DTS:To="Package\04 - HECHOS - FactBeanMorphology" />
     <DTS:PrecedenceConstraint DTS:refId="Package.PrecedenceConstraints[DimTamano_to_Fact]" DTS:CreationName="" DTS:DTSID="{A45248C4-F5E8-4FA8-BDA0-D225315B80DF}" DTS:From="Package\03B - DIMENSION - DimTamano" DTS:LogicalAnd="True" DTS:ObjectName="DimTamano_to_Fact" DTS:To="Package\04 - HECHOS - FactBeanMorphology" />
     <DTS:PrecedenceConstraint DTS:refId="Package.PrecedenceConstraints[DimForma_to_Fact]" DTS:CreationName="" DTS:DTSID="{03685EED-C687-444D-86BB-79DD45877BEF}" DTS:From="Package\03C - DIMENSION - DimForma" DTS:LogicalAnd="True" DTS:ObjectName="DimForma_to_Fact" DTS:To="Package\04 - HECHOS - FactBeanMorphology" />
+    <DTS:PrecedenceConstraint DTS:refId="Package.PrecedenceConstraints[DimTiempo_to_Fact]" DTS:CreationName="" DTS:DTSID="{726F084B-6DE3-43C7-99DA-B9714DE69B5F}" DTS:From="Package\03D - DIMENSION - DimTiempo" DTS:LogicalAnd="True" DTS:ObjectName="DimTiempo_to_Fact" DTS:To="Package\04 - HECHOS - FactBeanMorphology" />
     <DTS:PrecedenceConstraint DTS:refId="Package.PrecedenceConstraints[Fact_to_Validate]" DTS:CreationName="" DTS:DTSID="{24C0EFBD-9064-4FC8-A389-E24C76D9C11F}" DTS:From="Package\04 - HECHOS - FactBeanMorphology" DTS:LogicalAnd="True" DTS:ObjectName="Fact_to_Validate" DTS:To="Package\05 - VALIDATE - Integridad y conteos" />
   </DTS:PrecedenceConstraints>
   <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
@@ -187,7 +206,7 @@
     design-time-name="Package">
     <LayoutInfo>
       <GraphLayout
-        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        Capacity="9" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
         <NodeLayout
           Size="260,42"
           Id="Package\00 - PREPARE - Crear esquema full"
@@ -212,6 +231,10 @@
           Size="220,48"
           Id="Package\03C - DIMENSION - DimForma"
           TopLeft="580,270" />
+        <NodeLayout
+          Size="220,48"
+          Id="Package\03D - DIMENSION - DimTiempo"
+          TopLeft="840,270" />
         <NodeLayout
           Size="250,52"
           Id="Package\04 - HECHOS - FactBeanMorphology"

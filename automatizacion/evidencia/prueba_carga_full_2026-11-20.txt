@@ -13,11 +13,12 @@ Conteos despues de ambas ejecuciones:
 - dim_variedad: 7
 - dim_tamano: 4
 - dim_forma: 4
+- dim_tiempo: 1 fecha técnica de carga (se acumulan fechas en ejecuciones de días posteriores)
 - fact_bean_morphology: 13,543
 
 Validaciones:
 - Identificadores de grano unicos: 13,543
-- Claves dimensionales invalidas: 0
+- Claves dimensionales invalidas, incluida id_tiempo: 0
 - Errores DBCC CHECKCONSTRAINTS: 0
 
-Conclusion: la carga es completa, recuperable e idempotente para el contenido actual. Si las tablas se eliminan, PREPARE las reconstruye; si el proceso se repite, no duplica hechos ni catalogos.
+Conclusion: la carga es completa, recuperable e idempotente para el contenido actual. Si las tablas se eliminan, PREPARE las reconstruye; si el proceso se repite el mismo día, no duplica hechos, catálogos ni la fecha de DimTiempo.

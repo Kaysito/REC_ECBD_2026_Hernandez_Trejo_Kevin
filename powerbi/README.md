@@ -2,7 +2,7 @@
 
 El archivo final usa **una sola tabla analítica** denominada `DryBean_Analitica`. No se agregó un modelo estrella ni relaciones dentro de Power BI. Power Query consulta directamente `DryBean_DataMart` en SQL Server LocalDB y realiza los `JOIN` de las tres dimensiones con la tabla de hechos para obtener 13,543 registros.
 
-El modelo estrella se conserva, por separado, en SQL Server y SQLite como evidencia de Data Mart. Power BI no depende de esas relaciones para abrir ni para utilizar sus filtros.
+El modelo estrella se conserva, por separado, en SQL Server y SQLite como evidencia de Data Mart. Incluye `dim_tiempo` para identificar la fecha técnica de cada carga. Power BI recibe esos campos ya unidos en su única tabla analítica y no crea relaciones internas.
 
 ## Archivos de entrega
 

@@ -1,0 +1,12 @@
+{
+  "name": "anio",
+  "dataType": "int64",
+  "sourceColumn": "anio",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "User"
+    }
+  ]
+}

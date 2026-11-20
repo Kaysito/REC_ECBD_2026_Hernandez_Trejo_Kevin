@@ -1,0 +1,12 @@
+{
+  "name": "dia",
+  "dataType": "int64",
+  "sourceColumn": "dia",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "User"
+    }
+  ]
+}

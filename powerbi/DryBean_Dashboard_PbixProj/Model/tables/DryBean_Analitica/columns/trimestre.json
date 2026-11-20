@@ -1,0 +1,12 @@
+{
+  "name": "trimestre",
+  "dataType": "int64",
+  "sourceColumn": "trimestre",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "User"
+    }
+  ]
+}

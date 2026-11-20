@@ -42,7 +42,7 @@ WITH (
 GO
 
 INSERT INTO dbo.fact_bean_morphology (
-    id_variedad, id_tamano, id_forma,
+    id_variedad, id_tamano, id_forma, id_tiempo,
     area, perimeter, major_axis_length, minor_axis_length,
     convex_area, equiv_diameter, aspect_ratio, eccentricity,
     extent, solidity, roundness, compactness,
@@ -52,6 +52,7 @@ SELECT
     v.id_variedad,
     t.id_tamano,
     f.id_forma,
+    CONVERT(INT, CONVERT(CHAR(8), GETDATE(), 112)),
     s.Area, s.Perimeter, s.MajorAxisLength, s.MinorAxisLength,
     s.ConvexArea, s.EquivDiameter, s.AspectRatio, s.Eccentricity,
     s.Extent, s.Solidity, s.Roundness, s.Compactness,

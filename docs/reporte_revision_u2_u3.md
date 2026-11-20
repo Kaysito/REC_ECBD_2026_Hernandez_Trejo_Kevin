@@ -39,7 +39,7 @@ En cumplimiento con el calendario y la guia del Proyecto Integrador, se consolid
 ### 2.2. Data Mart Dimensional (`sql/schema_datamart.sql`)
 - Diseno en **esquema estrella** compatible con SQL Server:
   - **Tabla de Hechos:** `fact_bean_morphology` (16 descriptores morfologicos continuos por grano).
-  - **Dimensiones:** `dim_variedad` (catalogo de 7 especies), `dim_tamano` (segmentacion de superficie) y `dim_forma` (alargamiento/redondez).
+  - **Dimensiones:** `dim_variedad` (catalogo de 7 especies), `dim_tamano` (segmentacion de superficie), `dim_forma` (alargamiento/redondez) y `dim_tiempo` (fecha técnica de carga ETL).
   - Vistas analiticas (`vw_resumen_morfologico_variedad` y `vw_distribucion_tamano_variedad`) listas para explotacion OLAP y conexion con Power BI.
 
 ---

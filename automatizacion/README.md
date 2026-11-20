@@ -6,7 +6,7 @@ La tarea de Windows `ECBD_DryBean_ETL_0300` ejecuta diariamente el paquete `ssis
 
 1. El Programador de tareas inicia `automatizacion/ejecutar_etl_ssis.ps1`.
 2. El script utiliza el runtime `DTExec` de SQL Server instalado en el equipo para ejecutar el paquete creado y mantenido en Visual Studio Community.
-3. El paquete crea o recupera el esquema, carga el CSV procesado en staging, transforma categorías, recarga las dimensiones, carga `FactBeanMorphology` y valida 13,543 hechos.
+3. El paquete crea o recupera el esquema, carga el CSV procesado en staging, transforma categorías, recarga las dimensiones, registra la fecha en `DimTiempo`, carga `FactBeanMorphology` y valida 13,543 hechos.
 4. Cada ejecución genera un archivo en `automatizacion/logs/` con fecha, salida y resultado.
 5. La opción `StartWhenAvailable` permite recuperar una ejecución omitida cuando el equipo vuelve a estar disponible.
 

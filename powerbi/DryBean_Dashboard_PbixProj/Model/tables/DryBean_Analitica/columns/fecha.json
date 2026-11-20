@@ -1,0 +1,12 @@
+{
+  "name": "fecha",
+  "dataType": "string",
+  "sourceColumn": "fecha",
+  "summarizeBy": "none",
+  "annotations": [
+    {
+      "name": "SummarizationSetBy",
+      "value": "User"
+    }
+  ]
+}

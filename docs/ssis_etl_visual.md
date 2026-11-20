@@ -12,10 +12,11 @@ El paquete `Package.dtsx` implementa visualmente la carga del Data Mart estrella
 4. **03A - DIMENSION - DimVariedad:** reinicia y carga el catálogo de siete variedades.
 5. **03B - DIMENSION - DimTamano:** reinicia y carga el catálogo de cuatro categorías de tamaño.
 6. **03C - DIMENSION - DimForma:** reinicia y carga el catálogo de cuatro categorías de forma.
-7. **04 - HECHOS - FactBeanMorphology:** recibe las tres dimensiones, asigna sus claves y carga los 13,543 hechos.
-8. **05 - VALIDATE - Integridad y conteos:** comprueba hechos, claves y restricciones, y elimina las tablas temporales.
+7. **03D - DIMENSION - DimTiempo:** registra la fecha de ejecución con clave `YYYYMMDD`, año, trimestre, mes y día.
+8. **04 - HECHOS - FactBeanMorphology:** recibe las cuatro dimensiones, asigna sus claves y carga los 13,543 hechos.
+9. **05 - VALIDATE - Integridad y conteos:** comprueba hechos, claves y restricciones, y elimina las tablas temporales.
 
-Las flechas verdes representan restricciones de precedencia por éxito. Después de la transformación, las tres comprobaciones dimensionales se ejecutan en paralelo y convergen en la tabla de hechos. Esta distribución muestra visualmente la forma de estrella del Data Mart.
+Las flechas verdes representan restricciones de precedencia por éxito. Después de la transformación, las cuatro dimensiones se ejecutan en paralelo y convergen en la tabla de hechos. Esta distribución muestra visualmente la forma de estrella del Data Mart.
 
 ## Conexion
 
@@ -30,7 +31,7 @@ Las flechas verdes representan restricciones de precedencia por éxito. Después
 1. Abrir `ssis/DryBean_ETL_SSIS/DryBean_ETL_SSIS.slnx`.
 2. Abrir `Package.dtsx` y seleccionar **Flujo de control**.
 3. Presionar **Iniciar** o `F5`.
-4. Confirmar que las ocho tareas queden verdes y aparezca el mensaje: “La ejecución del paquete se completó correctamente”.
+4. Confirmar que las nueve tareas queden verdes y aparezca el mensaje: “La ejecución del paquete se completó correctamente”.
 
 ## Validacion realizada
 
