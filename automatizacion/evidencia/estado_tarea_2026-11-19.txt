@@ -1,0 +1,16 @@
+EVIDENCIA DE AUTOMATIZACION DEL ETL SSIS
+
+Tarea: ECBD_DryBean_ETL_0300
+Estado despues de la prueba: Ready
+Ultima ejecucion: 2026-11-19 23:50:14 America/Mexico_City
+Ultimo resultado: 0 (ejecucion correcta)
+Proxima ejecucion: 2026-11-20 03:00:00 America/Mexico_City
+Frecuencia: diaria
+Recuperacion de ejecucion omitida: habilitada (StartWhenAvailable)
+
+Resultado de la ejecucion de prueba:
+- DTExec devolvio DTSER_SUCCESS (0).
+- El paquete completo EXTRACT, TRANSFORM, dimensiones, hechos y validacion finalizo correctamente.
+- SQL Server contiene 13,543 filas en dbo.fact_bean_morphology.
+- DBCC CHECKCONSTRAINTS no reporto incumplimientos.
+

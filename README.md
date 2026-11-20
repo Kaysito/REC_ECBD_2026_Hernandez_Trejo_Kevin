@@ -128,6 +128,8 @@ El navegador abrira normalmente `http://localhost:8501`. Los filtros del dashboa
 
 Para revisar el ETL visual, abrir `ssis/DryBean_ETL_SSIS/DryBean_ETL_SSIS.slnx` en Visual Studio y ejecutar `Package.dtsx`. La guia completa se encuentra en `docs/ssis_etl_visual.md`.
 
+El ETL SSIS también está automatizado mediante el Programador de tareas de Windows. La tarea `ECBD_DryBean_ETL_0300` se ejecuta diariamente a las 03:00 y conserva una bitácora por ejecución. La configuración y las instrucciones se encuentran en `automatizacion/`.
+
 Para regenerar la copia SQLite y los archivos de Power BI:
 
 ```powershell

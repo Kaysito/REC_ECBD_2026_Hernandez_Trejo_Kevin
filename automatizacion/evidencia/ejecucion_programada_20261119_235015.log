@@ -1,0 +1,11 @@
+[2026-11-19 23:50:15] Inicio de la actualizacion automatica del Data Mart Dry Bean.
+[2026-11-19 23:50:15] Ejecutor SSIS: C:\Program Files\Microsoft SQL Server\130\DTS\Binn\DTExec.exe
+[2026-11-19 23:50:15] Paquete: C:\Users\crepe\Documents\Proyectos\REC_ECBD_2026_Hernandez_Trejo_Kevin\ssis\DryBean_ETL_SSIS\Package.dtsx
+[2026-11-19 23:50:15] Ejecutando el paquete creado en Visual Studio: EXTRACT, TRANSFORM, dimensiones, hechos y validacion.
+Microsoft (R) SQL Server Execute Package Utility
+Version 13.0.6300.2 for 64-bit
+Started: 11:50:15 p. m.
+DTExec: The package execution returned DTSER_SUCCESS (0).
+Finished: 11:50:16 p. m.
+Elapsed: 0.578 seconds
+[2026-11-19 23:50:16] ETL finalizado correctamente. Data Mart actualizado y validado.
