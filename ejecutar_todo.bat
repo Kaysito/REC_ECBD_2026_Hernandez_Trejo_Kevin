@@ -23,7 +23,7 @@ if %ERRORLEVEL% NEQ 0 (
 )
 
 echo.
-echo [3/5] Generando evidencias graficas en outputs/...
+echo [3/6] Generando evidencias graficas en outputs/...
 .venv\Scripts\python.exe src\generar_graficas.py
 if %ERRORLEVEL% NEQ 0 (
     echo Error generando graficas.
@@ -32,7 +32,7 @@ if %ERRORLEVEL% NEQ 0 (
 )
 
 echo.
-echo [4/5] Ejecutando PCA y K-means...
+echo [4/6] Ejecutando PCA y K-means...
 .venv\Scripts\python.exe src\modelos_no_supervisados.py
 if %ERRORLEVEL% NEQ 0 (
     echo Error durante el analisis no supervisado.
@@ -41,7 +41,16 @@ if %ERRORLEVEL% NEQ 0 (
 )
 
 echo.
-echo [5/5] Generando Data Mart SQLite y vistas para Power BI...
+echo [5/6] Exportando parametros aprendidos por los modelos...
+.venv\Scripts\python.exe src\exportar_parametros_modelos.py
+if %ERRORLEVEL% NEQ 0 (
+    echo Error exportando parametros de modelos.
+    pause
+    exit /b %ERRORLEVEL%
+)
+
+echo.
+echo [6/6] Generando Data Mart SQLite y vistas para Power BI...
 .venv\Scripts\python.exe src\exportar_sqlite_datamart.py
 if %ERRORLEVEL% NEQ 0 (
     echo Error generando el Data Mart SQLite.

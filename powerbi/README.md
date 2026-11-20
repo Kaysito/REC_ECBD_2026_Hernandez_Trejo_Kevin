@@ -1,6 +1,6 @@
 # Dashboard Power BI — Dry Bean
 
-El archivo final usa **una sola tabla analítica** denominada `DryBean_Analitica`. No se agregó un modelo estrella ni relaciones dentro de Power BI, tal como se decidió para simplificar la exposición. La tabla proviene de `data/bi/drybean_powerbi.csv` y contiene 13,543 registros limpios.
+El archivo final usa **una sola tabla analítica** denominada `DryBean_Analitica`. No se agregó un modelo estrella ni relaciones dentro de Power BI. Power Query consulta directamente `DryBean_DataMart` en SQL Server LocalDB y realiza los `JOIN` de las tres dimensiones con la tabla de hechos para obtener 13,543 registros.
 
 El modelo estrella se conserva, por separado, en SQL Server y SQLite como evidencia de Data Mart. Power BI no depende de esas relaciones para abrir ni para utilizar sus filtros.
 
@@ -29,7 +29,7 @@ El modelo estrella se conserva, por separado, en SQL Server y SQLite como eviden
 
 - `medidas_dax.txt`: medidas listas para copiar.
 - `tema_drybean.json`: colores y estilos del proyecto.
-- `data/bi/drybean_powerbi.csv`: vista lista para importar.
+- `data/bi/drybean_powerbi.csv`: respaldo portátil para contingencia; no es la fuente principal del PBIX.
 - `data/datamart/drybean_datamart.sqlite`: copia portátil del esquema estrella, externa a Power BI.
 
-Para la exposición basta con abrir el archivo `.pbix`. Si se mueve el repositorio y Power BI solicita actualizar la fuente, seleccione `data/bi/drybean_powerbi.csv` y pulse **Actualizar**.
+Para la exposición basta con abrir el archivo `.pbix` y pulsar **Actualizar**. SQL Server LocalDB y la base `DryBean_DataMart` deben estar disponibles. El CSV queda únicamente como respaldo de contingencia.

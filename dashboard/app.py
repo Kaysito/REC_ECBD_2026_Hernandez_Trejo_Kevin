@@ -21,6 +21,7 @@ DATA = ROOT / "data" / "processed" / "dry_beans_clustered.csv"
 DATAMART = ROOT / "data" / "datamart" / "drybean_datamart.sqlite"
 METRICAS_SUP = ROOT / "outputs" / "evaluacion_modelos_supervisados.json"
 METRICAS_UNSUP = ROOT / "outputs" / "evaluacion_modelos_no_supervisados.json"
+PARAMETROS = ROOT / "outputs" / "resumen_parametros_modelos.json"
 
 st.set_page_config(page_title="Dry Bean | Kevin Hernández", page_icon="🫘", layout="wide")
 st.markdown("""
@@ -79,7 +80,7 @@ c3.metric("Área promedio", f"{df_f['area'].mean():,.0f}")
 c4.metric("Redondez promedio", f"{df_f['roundness'].mean():.3f}")
 c5.metric("Exactitud modelo", f"{datos_clf['Accuracy']:.2%}")
 
-tab0, tab1, tab2, tab3, tab4 = st.tabs(["Resumen ejecutivo", "Datos", "Supervisado", "No supervisado", "Trazabilidad"])
+tab0, tab1, tab2, tab3, tab4, tab5 = st.tabs(["Resumen ejecutivo", "Datos", "Supervisado", "No supervisado", "Modelos", "Trazabilidad"])
 
 with tab0:
     izquierda, derecha = st.columns([1.15, 1])
@@ -150,6 +151,38 @@ with tab3:
     st.caption("La variable Class no participó en K-means; solo se usa después para interpretar los grupos.")
 
 with tab4:
+    st.subheader("Parámetros aprendidos por los modelos")
+    with open(PARAMETROS, encoding="utf-8") as f:
+        parametros = json.load(f)
+
+    st.markdown("**Regresión lineal múltiple**")
+    st.code(
+        f"Area = {parametros['regresion_lineal']['intercepto']:.6f} + suma(coeficiente_i × variable_i)",
+        language="text",
+    )
+    coef_reg = pd.read_csv(ROOT / "outputs" / "coeficientes_regresion_lineal.csv")
+    st.dataframe(coef_reg[["Variable", "Coeficiente"]].style.format({"Coeficiente":"{:.8f}"}),
+                 hide_index=True, width="stretch")
+    st.caption("Los coeficientes están expresados en las unidades originales. El signo indica la dirección del efecto, manteniendo constantes las demás variables.")
+
+    izquierda, derecha = st.columns(2)
+    importancia = pd.read_csv(ROOT / "outputs" / "importancia_random_forest_clasificacion.csv").head(10)
+    izquierda.plotly_chart(px.bar(importancia.sort_values("Importancia"), x="Importancia", y="Variable",
+                                   orientation="h", title="Variables relevantes para clasificar"), width="stretch")
+    coef_log = pd.read_csv(ROOT / "outputs" / "coeficientes_regresion_logistica.csv")
+    clase_modelo = derecha.selectbox("Coeficientes de la clase", sorted(coef_log["Clase"].unique()))
+    derecha.dataframe(coef_log[coef_log["Clase"] == clase_modelo][["Variable", "Coeficiente"]]
+                       .sort_values("Coeficiente", key=lambda s: s.abs(), ascending=False).head(10)
+                       .style.format({"Coeficiente":"{:.8f}"}), hide_index=True, width="stretch")
+
+    st.markdown("**Centroides de K-Means en las unidades originales**")
+    centros = pd.read_csv(ROOT / "outputs" / "centros_clusters_originales.csv")
+    columnas_centro = ["Cluster", "Area", "Perimeter", "AspectRatio", "Roundness", "Compactness", "Solidity"]
+    st.dataframe(centros[columnas_centro].style.format({c:"{:,.4f}" for c in columnas_centro if c != "Cluster"}),
+                 hide_index=True, width="stretch")
+    st.info("Regresión logística clasifica la variedad, la regresión estima Area y K-Means descubre tres perfiles sin utilizar Class.")
+
+with tab5:
     st.markdown("""
     1. El original se conserva sin cambios en `data/raw/`.
     2. El ETL elimina 68 duplicados y conserva 13,543 registros en `data/processed/`.

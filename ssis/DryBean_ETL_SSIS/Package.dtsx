@@ -29,6 +29,23 @@
   <DTS:Variables />
   <DTS:Executables>
     <DTS:Executable
+      DTS:refId="Package\00 - PREPARE - Crear esquema full"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Crea las tablas e índices cuando no existen y vacía la tabla de hechos para una carga full."
+      DTS:DTSID="{8D6B67FD-58DC-46E8-85D4-45C2E50FE753}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="00 - PREPARE - Crear esquema full"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask"
+          SQLTask:Connection="{A3CC464B-B49D-4948-A7ED-606C07495C0B}"
+          SQLTask:SqlStatementSource="IF OBJECT_ID('dbo.dim_variedad','U') IS NULL CREATE TABLE dbo.dim_variedad(id_variedad INT IDENTITY(1,1) PRIMARY KEY,nombre_variedad VARCHAR(50) NOT NULL UNIQUE,codigo_variedad CHAR(3) NOT NULL,descripcion_agronomica VARCHAR(255) NULL);&#xA;IF OBJECT_ID('dbo.dim_tamano','U') IS NULL CREATE TABLE dbo.dim_tamano(id_tamano INT IDENTITY(1,1) PRIMARY KEY,categoria_tamano VARCHAR(50) NOT NULL,rango_area_min FLOAT NOT NULL,rango_area_max FLOAT NOT NULL,descripcion VARCHAR(150) NULL);&#xA;IF OBJECT_ID('dbo.dim_forma','U') IS NULL CREATE TABLE dbo.dim_forma(id_forma INT IDENTITY(1,1) PRIMARY KEY,categoria_forma VARCHAR(50) NOT NULL,rango_aspect_ratio_min FLOAT NOT NULL,rango_aspect_ratio_max FLOAT NOT NULL,descripcion VARCHAR(150) NULL);&#xA;IF OBJECT_ID('dbo.fact_bean_morphology','U') IS NULL CREATE TABLE dbo.fact_bean_morphology(id_grano INT IDENTITY(1,1) PRIMARY KEY,id_variedad INT NOT NULL,id_tamano INT NOT NULL,id_forma INT NOT NULL,area INT NOT NULL,perimeter FLOAT NOT NULL,major_axis_length FLOAT NOT NULL,minor_axis_length FLOAT NOT NULL,convex_area INT NOT NULL,equiv_diameter FLOAT NOT NULL,aspect_ratio FLOAT NOT NULL,eccentricity FLOAT NOT NULL,extent FLOAT NOT NULL,solidity FLOAT NOT NULL,roundness FLOAT NOT NULL,compactness FLOAT NOT NULL,shape_factor_1 FLOAT NOT NULL,shape_factor_2 FLOAT NOT NULL,shape_factor_3 FLOAT NOT NULL,shape_factor_4 FLOAT NOT NULL,fecha_carga DATETIME DEFAULT GETDATE(),CONSTRAINT FK_fact_variedad FOREIGN KEY(id_variedad) REFERENCES dbo.dim_variedad(id_variedad),CONSTRAINT FK_fact_tamano FOREIGN KEY(id_tamano) REFERENCES dbo.dim_tamano(id_tamano),CONSTRAINT FK_fact_forma FOREIGN KEY(id_forma) REFERENCES dbo.dim_forma(id_forma));&#xA;TRUNCATE TABLE dbo.fact_bean_morphology;&#xA;IF NOT EXISTS(SELECT 1 FROM sys.indexes WHERE name='IX_fact_variedad' AND object_id=OBJECT_ID('dbo.fact_bean_morphology')) CREATE INDEX IX_fact_variedad ON dbo.fact_bean_morphology(id_variedad);&#xA;IF NOT EXISTS(SELECT 1 FROM sys.indexes WHERE name='IX_fact_tamano' AND object_id=OBJECT_ID('dbo.fact_bean_morphology')) CREATE INDEX IX_fact_tamano ON dbo.fact_bean_morphology(id_tamano);&#xA;IF NOT EXISTS(SELECT 1 FROM sys.indexes WHERE name='IX_fact_forma' AND object_id=OBJECT_ID('dbo.fact_bean_morphology')) CREATE INDEX IX_fact_forma ON dbo.fact_bean_morphology(id_forma);" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
       DTS:refId="Package\01 - EXTRACT - CSV a staging"
       DTS:CreationName="Microsoft.ExecuteSQLTask"
       DTS:Description="Carga 13,543 filas del CSV procesado a tablas de staging."
@@ -65,7 +82,7 @@
     <DTS:Executable
       DTS:refId="Package\03A - DIMENSION - DimVariedad"
       DTS:CreationName="Microsoft.ExecuteSQLTask"
-      DTS:Description="Comprueba que las 7 variedades de staging existan en DimVariedad."
+      DTS:Description="Recarga las 7 variedades para la carga full."
       DTS:DTSID="{0CE99F58-E623-48B6-A845-00CD53AA90B1}"
       DTS:ExecutableType="Microsoft.ExecuteSQLTask"
       DTS:LocaleID="-1"
@@ -76,13 +93,13 @@
       <DTS:ObjectData>
         <SQLTask:SqlTaskData xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask"
           SQLTask:Connection="{A3CC464B-B49D-4948-A7ED-606C07495C0B}"
-          SQLTask:SqlStatementSource="IF EXISTS (SELECT DISTINCT s.Class FROM dbo.stg_dry_beans_clean s LEFT JOIN dbo.dim_variedad d ON d.nombre_variedad=s.Class WHERE d.id_variedad IS NULL) THROW 51011,'DimVariedad no contiene todas las clases de staging.',1;" />
+          SQLTask:SqlStatementSource="DELETE FROM dbo.dim_variedad;&#xA;DBCC CHECKIDENT('dbo.dim_variedad',RESEED,0);&#xA;INSERT INTO dbo.dim_variedad(nombre_variedad,codigo_variedad,descripcion_agronomica) VALUES('BARBUNYA','BAR','Grano pinto mediano a grande'),('BOMBAY','BOM','Grano blanco muy grande'),('CALI','CAL','Grano alargado rojizo'),('DERMASON','DER','Grano blanco medio-pequeno'),('HOROZ','HOR','Grano cilindrico y alargado'),('SEKER','SEK','Grano esferico y compacto'),('SIRA','SIR','Grano pequeno y excentrico');&#xA;IF (SELECT COUNT(*) FROM dbo.dim_variedad)&lt;&gt;7 THROW 51011,'DimVariedad no contiene 7 registros.',1;" />
       </DTS:ObjectData>
     </DTS:Executable>
     <DTS:Executable
       DTS:refId="Package\03B - DIMENSION - DimTamano"
       DTS:CreationName="Microsoft.ExecuteSQLTask"
-      DTS:Description="Comprueba que las 4 categorías de tamaño existan en DimTamano."
+      DTS:Description="Recarga las 4 categorías de tamaño para la carga full."
       DTS:DTSID="{5D3B768F-6EED-4FD1-83CC-C029BF805185}"
       DTS:ExecutableType="Microsoft.ExecuteSQLTask"
       DTS:LocaleID="-1"
@@ -93,13 +110,13 @@
       <DTS:ObjectData>
         <SQLTask:SqlTaskData xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask"
           SQLTask:Connection="{A3CC464B-B49D-4948-A7ED-606C07495C0B}"
-          SQLTask:SqlStatementSource="IF EXISTS (SELECT DISTINCT s.CategoriaTamano FROM dbo.stg_dry_beans_clean s LEFT JOIN dbo.dim_tamano d ON d.categoria_tamano=s.CategoriaTamano WHERE d.id_tamano IS NULL) THROW 51012,'DimTamano no contiene todas las categorías de staging.',1;" />
+          SQLTask:SqlStatementSource="DELETE FROM dbo.dim_tamano;&#xA;DBCC CHECKIDENT('dbo.dim_tamano',RESEED,0);&#xA;INSERT INTO dbo.dim_tamano(categoria_tamano,rango_area_min,rango_area_max,descripcion) VALUES('Pequeno',0,45001,'Area menor o igual a 45,000 pixeles'),('Mediano',45001,70001,'Area entre 45,001 y 70,000 pixeles'),('Grande',70001,110001,'Area entre 70,001 y 110,000 pixeles'),('Muy Grande',110001,300001,'Area mayor o igual a 110,001 pixeles');&#xA;IF (SELECT COUNT(*) FROM dbo.dim_tamano)&lt;&gt;4 THROW 51012,'DimTamano no contiene 4 registros.',1;" />
       </DTS:ObjectData>
     </DTS:Executable>
     <DTS:Executable
       DTS:refId="Package\03C - DIMENSION - DimForma"
       DTS:CreationName="Microsoft.ExecuteSQLTask"
-      DTS:Description="Comprueba que las 4 categorías de forma existan en DimForma."
+      DTS:Description="Recarga las 4 categorías de forma para la carga full."
       DTS:DTSID="{C359D8A4-8999-4427-B59A-2EAA265C0382}"
       DTS:ExecutableType="Microsoft.ExecuteSQLTask"
       DTS:LocaleID="-1"
@@ -110,7 +127,7 @@
       <DTS:ObjectData>
         <SQLTask:SqlTaskData xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask"
           SQLTask:Connection="{A3CC464B-B49D-4948-A7ED-606C07495C0B}"
-          SQLTask:SqlStatementSource="IF EXISTS (SELECT DISTINCT s.CategoriaForma FROM dbo.stg_dry_beans_clean s LEFT JOIN dbo.dim_forma d ON d.categoria_forma=s.CategoriaForma WHERE d.id_forma IS NULL) THROW 51013,'DimForma no contiene todas las categorías de staging.',1;" />
+          SQLTask:SqlStatementSource="DELETE FROM dbo.dim_forma;&#xA;DBCC CHECKIDENT('dbo.dim_forma',RESEED,0);&#xA;INSERT INTO dbo.dim_forma(categoria_forma,rango_aspect_ratio_min,rango_aspect_ratio_max,descripcion) VALUES('Casi Esferica',1.00,1.30,'Relacion de aspecto menor que 1.30'),('Semi-Ovalada',1.30,1.65,'Relacion de aspecto entre 1.30 y 1.65'),('Elongada',1.65,2.05,'Relacion de aspecto entre 1.65 y 2.05'),('Muy Elongada',2.05,3.50,'Relacion de aspecto mayor o igual a 2.05');&#xA;IF (SELECT COUNT(*) FROM dbo.dim_forma)&lt;&gt;4 THROW 51013,'DimForma no contiene 4 registros.',1;" />
       </DTS:ObjectData>
     </DTS:Executable>
     <DTS:Executable
@@ -149,6 +166,7 @@
     </DTS:Executable>
   </DTS:Executables>
   <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint DTS:refId="Package.PrecedenceConstraints[Prepare_to_Extract]" DTS:CreationName="" DTS:DTSID="{CBD0D8C3-2980-49DD-AAB4-1F25240062D8}" DTS:From="Package\00 - PREPARE - Crear esquema full" DTS:LogicalAnd="True" DTS:ObjectName="Prepare_to_Extract" DTS:To="Package\01 - EXTRACT - CSV a staging" />
     <DTS:PrecedenceConstraint DTS:refId="Package.PrecedenceConstraints[Extract_to_Transform]" DTS:CreationName="" DTS:DTSID="{01D7C472-AB4B-4B13-B666-B1E8D4A745A2}" DTS:From="Package\01 - EXTRACT - CSV a staging" DTS:LogicalAnd="True" DTS:ObjectName="Extract_to_Transform" DTS:To="Package\02 - TRANSFORM - Limpiar y categorizar" />
     <DTS:PrecedenceConstraint DTS:refId="Package.PrecedenceConstraints[Transform_to_DimVariedad]" DTS:CreationName="" DTS:DTSID="{8AB50F26-68E7-4DA7-82FD-B3234BCF6189}" DTS:From="Package\02 - TRANSFORM - Limpiar y categorizar" DTS:LogicalAnd="True" DTS:ObjectName="Transform_to_DimVariedad" DTS:To="Package\03A - DIMENSION - DimVariedad" />
     <DTS:PrecedenceConstraint DTS:refId="Package.PrecedenceConstraints[Transform_to_DimTamano]" DTS:CreationName="" DTS:DTSID="{35EE0D72-0D10-4CE7-8D0C-A8E0D2BC4DF1}" DTS:From="Package\02 - TRANSFORM - Limpiar y categorizar" DTS:LogicalAnd="True" DTS:ObjectName="Transform_to_DimTamano" DTS:To="Package\03B - DIMENSION - DimTamano" />
@@ -169,35 +187,39 @@
     design-time-name="Package">
     <LayoutInfo>
       <GraphLayout
-        Capacity="7" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="260,42"
+          Id="Package\00 - PREPARE - Crear esquema full"
+          TopLeft="300,20" />
         <NodeLayout
           Size="260,42"
           Id="Package\01 - EXTRACT - CSV a staging"
-          TopLeft="300,30" />
+          TopLeft="300,90" />
         <NodeLayout
           Size="185,42"
           Id="Package\02 - TRANSFORM - Limpiar y categorizar"
-          TopLeft="335,110" />
+          TopLeft="335,160" />
         <NodeLayout
           Size="220,48"
           Id="Package\03A - DIMENSION - DimVariedad"
-          TopLeft="60,220" />
+          TopLeft="60,270" />
         <NodeLayout
           Size="220,48"
           Id="Package\03B - DIMENSION - DimTamano"
-          TopLeft="320,220" />
+          TopLeft="320,270" />
         <NodeLayout
           Size="220,48"
           Id="Package\03C - DIMENSION - DimForma"
-          TopLeft="580,220" />
+          TopLeft="580,270" />
         <NodeLayout
           Size="250,52"
           Id="Package\04 - HECHOS - FactBeanMorphology"
-          TopLeft="305,340" />
+          TopLeft="305,390" />
         <NodeLayout
           Size="230,48"
           Id="Package\05 - VALIDATE - Integridad y conteos"
-          TopLeft="315,450" />
+          TopLeft="315,500" />
       </GraphLayout>
     </LayoutInfo>
   </Package>

@@ -1,0 +1,29 @@
+{
+  "regresion_lineal": {
+    "objetivo": "Area",
+    "intercepto": -209967.59147651156,
+    "formula": "Area = intercepto + suma(coeficiente_i * variable_i)",
+    "escala": "Coeficientes convertidos a las unidades originales"
+  },
+  "regresion_logistica": {
+    "objetivo": "Class",
+    "clases": [
+      "BARBUNYA",
+      "BOMBAY",
+      "CALI",
+      "DERMASON",
+      "HOROZ",
+      "SEKER",
+      "SIRA"
+    ],
+    "formula": "P(clase) = softmax(intercepto_clase + suma(coeficiente_clase_i * variable_i))"
+  },
+  "random_forest": {
+    "clasificacion": "Importancia de variables por reducción promedio de impureza",
+    "regresion": "Importancia de variables por reducción promedio del error"
+  },
+  "kmeans": {
+    "clusters": 3,
+    "representacion": "Centroides transformados de PCA a las unidades morfológicas originales"
+  }
+}

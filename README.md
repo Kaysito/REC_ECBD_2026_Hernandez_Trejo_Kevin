@@ -68,7 +68,7 @@ El archivo original se conserva sin modificaciones en `data/raw`. Los datos cura
 
 1. **Unidad I (Comprension del Problema y Planeacion - 20%):** Completada. Documento en `outputs/` y marco comparativo IA / ML / Data Mining.
 2. **Unidad II (Preparacion de Datos, ETL y Data Mart - 15%):** Completada. Pipeline ETL funcional, auditoria de 68 duplicados y 0 nulos, y esquema estrella ejecutado en SQL Server 2025 LocalDB con 13,543 hechos, tres dimensiones y cero claves invalidas.
-   - **SSIS visual:** paquete de siete tareas con diseño de estrella: `EXTRACT -> TRANSFORM -> tres dimensiones -> tabla de hechos -> VALIDATE`. Las dimensiones `DimVariedad`, `DimTamano` y `DimForma` convergen visualmente en `FactBeanMorphology`.
+   - **SSIS visual:** paquete de ocho tareas con recuperación completa: `PREPARE -> EXTRACT -> TRANSFORM -> tres dimensiones -> tabla de hechos -> VALIDATE`. Puede reconstruir las tablas eliminadas y las dimensiones `DimVariedad`, `DimTamano` y `DimForma` convergen visualmente en `FactBeanMorphology`.
    - **AE1 - Exploracion y diagnostico:** notebook ejecutado e informe PDF disponibles en `notebooks/` y `docs/`.
    - El diagnostico de AE1 trabaja exclusivamente en modo lectura sobre `data/raw/` y verifica la integridad del original mediante SHA-256.
 3. **Unidad III (Analisis Supervisado - 25%):** Completada con particion solicitada de **70% entrenamiento / 30% prueba** (9,480 / 4,063 registros).
@@ -85,7 +85,7 @@ El archivo original se conserva sin modificaciones en `data/raw`. Los datos cura
    - Evaluacion K-means de k=2 a k=10 mediante codo y silhouette.
    - Mejor resultado interno: k=3, silhouette=0.4203.
    - Comparacion interpretativa con `Class`: ARI=0.2964 y NMI=0.4837; la clase no participa en el entrenamiento.
-5. **Unidad V (Visualizacion y Cierre - 15%):** Dashboard integrado y verificado en Streamlit con indicadores, análisis descriptivo, regresión, clasificación, clustering, PCA y trazabilidad. Power BI funciona como complemento descriptivo con una sola tabla analítica, dos páginas, 19 visuales, 9 medidas DAX y filtros interactivos; el modelo estrella permanece documentado por separado en SQL Server y SQLite.
+5. **Unidad V (Visualizacion y Cierre - 15%):** Dashboard integrado y verificado en Streamlit con indicadores, análisis descriptivo, regresión, clasificación, clustering, PCA, parámetros interpretables y trazabilidad. Power BI funciona como complemento descriptivo con una sola tabla analítica consultada directamente desde SQL Server, dos páginas, 19 visuales, 9 medidas DAX y filtros interactivos; el modelo estrella permanece documentado por separado en SQL Server y SQLite.
 
 ## Conclusiones y recomendaciones
 
@@ -125,6 +125,8 @@ Para abrir el dashboard:
 ```
 
 El navegador abrira normalmente `http://localhost:8501`. Los filtros del dashboard modifican la visualizacion, pero no reentrenan los modelos.
+
+La pestaña **Modelos** permite explicar la ecuación de regresión, coeficientes, importancia de variables, parámetros de clasificación y centroides de clustering. Los valores también se conservan en `outputs/resumen_parametros_modelos.json` y archivos CSV asociados.
 
 Para revisar el ETL visual, abrir `ssis/DryBean_ETL_SSIS/DryBean_ETL_SSIS.slnx` en Visual Studio y ejecutar `Package.dtsx`. La guia completa se encuentra en `docs/ssis_etl_visual.md`.
 

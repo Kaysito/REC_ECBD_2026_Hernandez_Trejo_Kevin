@@ -90,12 +90,20 @@ def write_model() -> None:
             (mdir / f"{name}.dax").write_text(dax + "\n", encoding="utf-8")
             (mdir / f"{name}.xml").write_text(f'<Measure Name="{name}">\n  <FormatString>{fmt}</FormatString>\n</Measure>', encoding="utf-8")
 
-        csv_path = (ROOT / "data" / "bi" / "drybean_powerbi.csv").resolve()
         typed = ",\n            ".join(f'{{"{c}", {M_TYPES[d]}}}' for c, d in spec["columns"])
-        m = (f'let\n    Source = Csv.Document(File.Contents("{str(csv_path).replace(chr(92), chr(92)*2)}"), '
-             '[Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),\n'
-             '    Headers = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),\n'
-             f'    Typed = Table.TransformColumnTypes(Headers, {{\n            {typed}\n        }}, "en-US")\n'
+        sql_query = ("SELECT f.id_grano, f.id_variedad, f.id_tamano, f.id_forma, f.area, f.perimeter, "
+                     "f.major_axis_length, f.minor_axis_length, f.convex_area, f.equiv_diameter, "
+                     "f.aspect_ratio, f.eccentricity, f.extent, f.solidity, f.roundness, f.compactness, "
+                     "f.shape_factor_1, f.shape_factor_2, f.shape_factor_3, f.shape_factor_4, "
+                     "CONVERT(varchar(19), f.fecha_carga, 120) AS fecha_carga, "
+                     "v.nombre_variedad AS variedad, t.categoria_tamano, fo.categoria_forma "
+                     "FROM dbo.fact_bean_morphology f "
+                     "INNER JOIN dbo.dim_variedad v ON f.id_variedad=v.id_variedad "
+                     "INNER JOIN dbo.dim_tamano t ON f.id_tamano=t.id_tamano "
+                     "INNER JOIN dbo.dim_forma fo ON f.id_forma=fo.id_forma")
+        m = (f'let\n    Source = Sql.Database("(localdb)\\MSSQLLocalDB", "DryBean_DataMart", '
+             f'[Query="{sql_query}"]),\n'
+             f'    Typed = Table.TransformColumnTypes(Source, {{\n            {typed}\n        }}, "en-US")\n'
              'in\n    Typed\n')
         q = OUT / "Model" / "queries" / f"{table}.m"; q.parent.mkdir(parents=True, exist_ok=True); q.write_text(m, encoding="utf-8")
 

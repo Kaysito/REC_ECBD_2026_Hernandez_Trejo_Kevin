@@ -1,0 +1,23 @@
+PRUEBA DE RECUPERACION Y CARGA COMPLETA DEL DATA MART
+Fecha: 20 de noviembre de 2026
+Paquete: ssis/DryBean_ETL_SSIS/Package.dtsx
+Base: DryBean_DataMart en (localdb)\MSSQLLocalDB
+
+Procedimiento de prueba:
+1. Se eliminaron de forma controlada fact_bean_morphology, dim_variedad, dim_tamano y dim_forma.
+2. Se ejecuto el paquete mediante automatizacion/ejecutar_etl_ssis.ps1.
+3. El paquete recreo el esquema y termino con codigo de salida 0.
+4. Se ejecuto inmediatamente una segunda vez y termino con codigo de salida 0.
+
+Conteos despues de ambas ejecuciones:
+- dim_variedad: 7
+- dim_tamano: 4
+- dim_forma: 4
+- fact_bean_morphology: 13,543
+
+Validaciones:
+- Identificadores de grano unicos: 13,543
+- Claves dimensionales invalidas: 0
+- Errores DBCC CHECKCONSTRAINTS: 0
+
+Conclusion: la carga es completa, recuperable e idempotente para el contenido actual. Si las tablas se eliminan, PREPARE las reconstruye; si el proceso se repite, no duplica hechos ni catalogos.
